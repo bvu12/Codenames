@@ -1,0 +1,18 @@
+{
+    "currentTeam": "RED",
+    "cards": [],
+    "blueOperativeTeamName": "BLUE",
+    "currentPlayer": "SPYMASTER",
+    "startingTeam": "RED",
+    "redOperativeTeamName": "RED",
+    "numRedCards": 9,
+    "blueSpymasterGuesses": 0,
+    "redSpymasterTeamName": "RED",
+    "redOperativeScore": 0,
+    "blueOperativeScore": 0,
+    "numBlueCards": 8,
+    "redSpymasterHint": "",
+    "redSpymasterGuesses": 0,
+    "blueSpymasterTeamName": "BLUE",
+    "blueSpymasterHint": ""
+}

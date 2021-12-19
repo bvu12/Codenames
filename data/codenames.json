@@ -1,0 +1,169 @@
+{
+    "currentTeam": "BLUE",
+    "cards": [
+        {
+            "visibleTeam": "?",
+            "index": 1,
+            "team": "NEUTRAL",
+            "word": "FALL"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 2,
+            "team": "NEUTRAL",
+            "word": "HOTEL"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 3,
+            "team": "BLUE",
+            "word": "TABLET"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 4,
+            "team": "BLUE",
+            "word": "PAN"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 5,
+            "team": "NEUTRAL",
+            "word": "AFRICA"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 6,
+            "team": "NEUTRAL",
+            "word": "PRESS"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 7,
+            "team": "ASSASSIN",
+            "word": "LOCH NESS"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 8,
+            "team": "NEUTRAL",
+            "word": "BEACH"
+        },
+        {
+            "visibleTeam": "RED",
+            "index": 9,
+            "team": "RED",
+            "word": "COVER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 10,
+            "team": "RED",
+            "word": "RAY"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 11,
+            "team": "RED",
+            "word": "GREEN"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 12,
+            "team": "RED",
+            "word": "PARK"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 13,
+            "team": "BLUE",
+            "word": "LOCK"
+        },
+        {
+            "visibleTeam": "RED",
+            "index": 14,
+            "team": "RED",
+            "word": "GOLD"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 15,
+            "team": "BLUE",
+            "word": "DINOSAUR"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 16,
+            "team": "RED",
+            "word": "TUBE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 17,
+            "team": "BLUE",
+            "word": "DRAFT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 18,
+            "team": "RED",
+            "word": "SEAL"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 19,
+            "team": "NEUTRAL",
+            "word": "JACK"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 20,
+            "team": "NEUTRAL",
+            "word": "SOLDIER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 21,
+            "team": "BLUE",
+            "word": "BAT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 22,
+            "team": "RED",
+            "word": "SPOT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 23,
+            "team": "RED",
+            "word": "LAP"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 24,
+            "team": "BLUE",
+            "word": "ARM"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 25,
+            "team": "BLUE",
+            "word": "FILM"
+        }
+    ],
+    "blueOperativeTeamName": "BLUE",
+    "currentPlayer": "SPYMASTER",
+    "startingTeam": "RED",
+    "redOperativeTeamName": "RED",
+    "numRedCards": 9,
+    "blueSpymasterGuesses": 0,
+    "redSpymasterTeamName": "RED",
+    "redOperativeScore": 2,
+    "blueOperativeScore": 0,
+    "numBlueCards": 8,
+    "redSpymasterHint": "1",
+    "redSpymasterGuesses": -1,
+    "blueSpymasterTeamName": "BLUE",
+    "blueSpymasterHint": ""
+}
