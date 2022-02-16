@@ -32,6 +32,7 @@ public class CardPanel extends JPanel {
         createCardButtons(ui.getGameBoard());
     }
 
+
     // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
     // MODIFIES: this
     // EFFECTS: If action is "REVEAL", reveal the colour of each card
@@ -51,7 +52,7 @@ public class CardPanel extends JPanel {
                     String setText;
                     setText = "Cards with a BLACK border are not yet revealed!";
                     setText += " Provide a hint to your operatives to proceed!";
-                    consoleLabel.setText(ui.addHtmlTags(setText));
+                    consolePanel.getConsoleLabel().setText(ui.addHtmlTags(setText));
 
                     // If the card is NOT yet in play, add a border for enhanced visibility
                     if (!card.isVisibleTeam()) {
@@ -64,7 +65,7 @@ public class CardPanel extends JPanel {
                     // Make sure the Spymaster can't access the card in the revealed key state
                     btn.setEnabled(false);
                 } else if (action.equals("CONCEAL")) { // If we want to conceal the cards
-                    consoleLabel.setText(ui.addHtmlTags("Press on any card to reveal it!"));
+                    consolePanel.getConsoleLabel().setText(ui.addHtmlTags("Press on any card to reveal it!"));
 
                     // Remove borders
                     btn.setBorder(null);
@@ -162,7 +163,7 @@ public class CardPanel extends JPanel {
         String assassin = "The " + ui.getGameBoard().getCurrentTeam() + " team has selected the assassin! ";
         ui.nextTeam(true); // Change the team to show that the OTHER team has won.
         assassin += "\nThe " + ui.getGameBoard().getCurrentTeam() + " team wins!";
-        consoleLabel.setText(ui.addHtmlTags(assassin));
+        consolePanel.getConsoleLabel().setText(ui.addHtmlTags(assassin));
 
         // Log event
         model.Event assassinPlayed = new Event(assassin);
@@ -191,7 +192,7 @@ public class CardPanel extends JPanel {
         printSelectedCard(team);
         operative = ui.selectOperative();
         operative.incrementScore(); // Increment score
-        scoreLabel.setText(ui.getScoreLabel());
+        teamScorePanel.getScoreLabel().setText(ui.getScoreLabel());
 
         // Check if the current team has won, if yes - immediately exit
         if (ui.checkIfGameWon()) {
@@ -205,7 +206,7 @@ public class CardPanel extends JPanel {
         String setText;
         setText = "Your hint is: " + spymaster.getHint() + ". You have "
                 + ui.guessesRemaining() + " guesses remaining!";
-        hintLabel.setText(ui.addHtmlTags(setText));
+        consolePanel.getHintLabel().setText(ui.addHtmlTags(setText));
 
         if (ui.guessesRemaining() > 0) {
             // DO NOTHING
@@ -224,7 +225,7 @@ public class CardPanel extends JPanel {
         ui.nextTeam(false);
         selectedOperative = ui.selectOperative();
         selectedOperative.incrementScore();
-        scoreLabel.setText(ui.getScoreLabel());
+        teamScorePanel.getScoreLabel().setText(ui.getScoreLabel());
 
         // Check if the game is won from this action
         if (ui.checkIfGameWon()) {
@@ -235,7 +236,7 @@ public class CardPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: Prints which team's card has just been selected
     private void printSelectedCard(String team) {
-        consoleLabel.setText(ui.addHtmlTags("You've selected a " + team + " card!"));
+        consolePanel.getConsoleLabel().setText(ui.addHtmlTags("You've selected a " + team + " card!"));
     }
 
     // MODIFIES: jb

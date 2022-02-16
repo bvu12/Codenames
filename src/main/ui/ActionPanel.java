@@ -90,7 +90,7 @@ public class ActionPanel extends JPanel {
     private void actionButtonActionListener() {
         actionButton.addActionListener(e -> {
             // Spymaster functionality
-            if (teamLabel.getText().contains("SPYMASTER")) {
+            if (teamScorePanel.getTeamLabel().getText().contains("SPYMASTER")) {
                 // Ask the user for input
                 String hintContext;
                 hintContext = "<html>Give a hint to your operatives!<br><br>"
@@ -106,12 +106,12 @@ public class ActionPanel extends JPanel {
                             JOptionPane.WARNING_MESSAGE);
                 } else { // Valid hint provided, switch to Operative's turn
                     ui.updatePlayer();
-                    ui.setTeamLabelText();
+                    teamScorePanel.setTeamLabelText();
                     ui.revealKey("CONCEAL");
                 }
             } else { // Operative's action is to end their turn
                 ui.nextTeam(false);
-                ui.setLabelBlank(consoleLabel);
+                ui.setLabelBlank(consolePanel.getConsoleLabel());
             }
         });
     }
@@ -194,8 +194,9 @@ public class ActionPanel extends JPanel {
         spymaster.setGuesses(numGuesses);
 
         String setText;
-        setText = "Your hint is: " + spymaster.getHint() + ". You have " + ui.guessesRemaining() + " guesses remaining!";
-        hintLabel.setText(ui.addHtmlTags(setText));
+        setText = "Your hint is: " + spymaster.getHint() + ". You have "
+                + ui.guessesRemaining() + " guesses remaining!";
+        consolePanel.getHintLabel().setText(ui.addHtmlTags(setText));
     }
 
     // MODIFIES: this

@@ -8,7 +8,6 @@ import persistence.JsonWriter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -34,8 +33,8 @@ public class CodenamesGUI {
     protected static int CTRLS_HGAP;
 
     // Font sizes
-    private static int FONT_SCORE;
-    private static int FONT_TEAM_INFO;
+    protected static int FONT_SCORE;
+    protected static int FONT_TEAM_INFO;
     protected static int FONT_CONSOLE;
     protected static int FONT_CARDS;
 
@@ -44,14 +43,10 @@ public class CodenamesGUI {
     private final JPanel mainPanel;
 
     // Team and score panels
-    private JPanel topPanel;
-    protected static JLabel teamLabel;
-    protected static JLabel scoreLabel;
+    protected static TeamScorePanel teamScorePanel;
 
     // Hint and console panels that output text to the user
-    private ConsolePanel consolePanel;
-    protected static JLabel hintLabel;
-    protected static JLabel consoleLabel;
+    protected static ConsolePanel consolePanel;
 
     // Card panels that hold the 25 cards in play
     private ArrayList<CardPanel> cardPanels;
@@ -157,36 +152,8 @@ public class CodenamesGUI {
     // EFFECTS: Create both the team and score labels
     private void setupTeamAndScorePanel() {
         // Create top panel
-        topPanel = new JPanel();
-        topPanel.setBorder(BorderFactory.createEmptyBorder(CTRLS_BRDR / 2,
-                CTRLS_BRDR,
-                CTRLS_BRDR / 2,
-                CTRLS_BRDR));
-
-        GridLayout topGridLayout = new GridLayout(1, 3);
-        topPanel.setLayout(topGridLayout);
-        topGridLayout.setHgap(100);
-
-        // Label displays which team is it
-        teamLabel = new JLabel(addHtmlTags(gameBoard.getCurrentTeam()
-                + " " + gameBoard.getCurrentPlayer()), SwingConstants.CENTER);
-        teamLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_TEAM_INFO));
-        setTeamLabelColour();
-
-        // Label displays what is the score
-        // SOURCE: https://stackoverflow.com/questions/6635730/how-do-i-put-html-in-a-jlabel-in-java
-        String scoreLabelText = getScoreLabel();
-        scoreLabel = new JLabel(scoreLabelText, SwingConstants.CENTER);
-        scoreLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_SCORE));
-
-        // Blank label for styling purposes
-        JLabel spacerLabel = new JLabel("", SwingConstants.CENTER);
-
-        // Add the labels to the panel and the panel to the main panel
-        topPanel.add(teamLabel);
-        topPanel.add(scoreLabel);
-        topPanel.add(spacerLabel);
-        mainPanel.add(topPanel);
+        teamScorePanel = new TeamScorePanel(this);
+        mainPanel.add(teamScorePanel);
     }
 
     // MODIFIES: this
@@ -194,8 +161,6 @@ public class CodenamesGUI {
     private void setupConsolePanel() {
         // CONSOLE
         consolePanel = new ConsolePanel(this);
-        hintLabel = consolePanel.getHintLabel();
-        consoleLabel = consolePanel.getConsoleLabel();
         mainPanel.add(consolePanel);
     }
 
@@ -247,14 +212,6 @@ public class CodenamesGUI {
         }
     }
 
-
-
-    // MODIFIES: this
-    // EFFECTS: Updates the label indicating which team/player's turn it is
-    protected void setTeamLabelText() {
-        teamLabel.setText(addHtmlTags(gameBoard.getCurrentTeam() + " " + gameBoard.getCurrentPlayer()));
-    }
-
     // EFFECTS: Returns the score to be displayed on the JLabel
     protected String getScoreLabel() {
         return "<html><FONT COLOR=RED>"
@@ -262,18 +219,6 @@ public class CodenamesGUI {
                 + "</FONT> - <FONT COLOR=BLUE>"
                 + gameBoard.getRemainingCards(BLUE)
                 + "</FONT></html>";
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Changes the team label to the appropriate team's color
-    private void setTeamLabelColour() {
-        String currentTeam = gameBoard.getCurrentTeam();
-
-        if (currentTeam.equals(RED)) {
-            teamLabel.setForeground(Color.RED);
-        } else {
-            teamLabel.setForeground(Color.BLUE);
-        }
     }
 
     // MODIFIES: this
@@ -410,18 +355,19 @@ public class CodenamesGUI {
 
         if (gameBoard.getCurrentTeam().equals(RED)) {
             gameBoard.setCurrentTeam(BLUE);
-            teamLabel.setText(BLUE);
+            teamScorePanel.getTeamLabel().setText(BLUE);
         } else {
             gameBoard.setCurrentTeam(RED);
-            teamLabel.setText(RED);
+            teamScorePanel.getScoreLabel().setText(RED);
         }
 
         updatePlayer();      // Go to next player
-        setTeamLabelText();  // Update the label
-        setTeamLabelColour();// Update the label's colour
+        teamScorePanel.setTeamLabelText();  // Update the label
+        teamScorePanel.setTeamLabelColour();// Update the label's colour
 
         if (!suppressPrint) {
-            hintLabel.setText(addHtmlTags("Switching to the " + gameBoard.getCurrentTeam() + " team's turn!"));
+            consolePanel.getHintLabel().setText(addHtmlTags("Switching to the "
+                    + gameBoard.getCurrentTeam() + " team's turn!"));
         }
 
     }
@@ -470,10 +416,10 @@ public class CodenamesGUI {
     // EFFECTS: Prints the winner to the console and sets gameContinue to false
     protected void gameWonMessage() {
         // Display who has won on the console
-        setLabelBlank(hintLabel);
+        setLabelBlank(consolePanel.getHintLabel());
         String wonMessage = "The " + gameBoard.getCurrentTeam()
                 + " team has WON by revealing all their agents!";
-        consoleLabel.setText(addHtmlTags(wonMessage));
+        consolePanel.getConsoleLabel().setText(addHtmlTags(wonMessage));
 
         // Log this event
         Event gameWon = new Event(wonMessage);
@@ -546,7 +492,7 @@ public class CodenamesGUI {
 
             // Clean-up and exit
             jsonWriter.close();
-            consoleLabel.setText("Saved game state to " + JSON_STORE);
+            consolePanel.getConsoleLabel().setText("Saved game state to " + JSON_STORE);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(frame,
                     "Unable to write to file: " + JSON_STORE,
