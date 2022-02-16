@@ -46,7 +46,7 @@ public class CodenamesGUI {
     // Team and score panels
     private JPanel topPanel;
     protected static JLabel teamLabel;
-    private JLabel scoreLabel;
+    protected static JLabel scoreLabel;
 
     // Hint and console panels that output text to the user
     private JPanel consolePanel;
@@ -73,14 +73,14 @@ public class CodenamesGUI {
 
     // Game objects
     private Board gameBoard;
-    private Spymaster redSpymaster;
-    private Spymaster blueSpymaster;
-    private Operative redOperative;
-    private Operative blueOperative;
+    protected static Spymaster redSpymaster;
+    protected static Spymaster blueSpymaster;
+    protected static Operative redOperative;
+    protected static Operative blueOperative;
     private String hint;
 
     // Event log
-    private EventLog eventLog;
+    protected static EventLog eventLog;
 
     public CodenamesGUI() {
         // Initialize the screen size
@@ -349,15 +349,15 @@ public class CodenamesGUI {
         teamLabel.setText(addHtmlTags(gameBoard.getCurrentTeam() + " " + gameBoard.getCurrentPlayer()));
     }
 
-    // MODIFIES: this
-    // EFFECTS: Prints which team's card has just been selected
-    private void printSelectedCard(String team) {
-        consoleLabel.setText(addHtmlTags("You've selected a " + team + " card!"));
-    }
+//    // MODIFIES: this
+//    // EFFECTS: Prints which team's card has just been selected
+//    private void printSelectedCard(String team) {
+//        consoleLabel.setText(addHtmlTags("You've selected a " + team + " card!"));
+//    }
 
 
     // EFFECTS: Returns the score to be displayed on the JLabel
-    private String getScoreLabel() {
+    protected String getScoreLabel() {
         return "<html><FONT COLOR=RED>"
                 + gameBoard.getRemainingCards(RED)
                 + "</FONT> - <FONT COLOR=BLUE>"
@@ -379,7 +379,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: Turns off UI elements and thanks the user for playing
-    private void thanksForPlaying() {
+    protected void thanksForPlaying() {
         JOptionPane.showMessageDialog(frame,
                 "See ya!",
                 "THE END",
@@ -502,112 +502,111 @@ public class CodenamesGUI {
         gameBoard.setBoardIndices();
     }
 
-    // MODIFIES: this
-    // EFFECTS:  allows the operative to guess and changes the game-state according to their guess
-    protected void guess(CardButton btn) {
-        Card card = btn.getCard();
-        card.makeVisibleTeam();
-
-        // Get the card associated with the guesses
-        String selectedTeam = card.getTeam();
-
-        // Get the current team
-        String currentTeam = gameBoard.getCurrentTeam();
-
-        // Log an event
-        Event event = new Event("The " + currentTeam + " team selected a "
-                + selectedTeam + " card (" + card.getWord() + ")!");
-        eventLog.logEvent(event);
-
-
-        // Depending on which card was selected
-        if (selectedTeam.equals(ASSASSIN)) {
-            guessAssassin();
-        } else if (selectedTeam.equals(NEUTRAL)) {
-            guessNeutral(selectedTeam);
-        } else if (selectedTeam.equals(currentTeam)) {
-            guessCorrect(selectedTeam);
-        } else { // Selected the opposite team's card
-            guessWrong(selectedTeam);
-        }
-
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Write to the console that the current team loses and returns false
-    private void guessAssassin() {
-        String assassin = "The " + gameBoard.getCurrentTeam() + " team has selected the assassin! ";
-        nextTeam(true); // Change the team to show that the OTHER team has won.
-        assassin += "\nThe " + gameBoard.getCurrentTeam() + " team wins!";
-        consoleLabel.setText(addHtmlTags(assassin));
-
-        // Log event
-        Event assassinPlayed = new Event(assassin);
-        eventLog.logEvent(assassinPlayed);
-
-        // Display thanks for playing message
-        thanksForPlaying();
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Write to the console that you've selected a neutral card, switches team and returns false
-    private void guessNeutral(String team) {
-        printSelectedCard(team);
-        nextTeam(false);
-    }
-
-
-    // MODIFIES: this
-    // EFFECTS: increments the score for the current team, check if this is sufficient to win (and end the game)
-    //          otherwise, decrement the number of available guesses
-    private void guessCorrect(String team) {
-        Operative operative;
-        Spymaster spymaster;
-
-
-        printSelectedCard(team);
-        operative = selectOperative();
-        operative.incrementScore(); // Increment score
-        scoreLabel.setText(getScoreLabel());
-
-        // Check if the current team has won, if yes - immediately exit
-        if (checkIfGameWon()) {
-            gameWonMessage();
-        }
-
-        // Reduce the number of guesses for this team
-        spymaster = selectSpymaster();
-        spymaster.decrementGuesses();
-
-        String setText;
-        setText = "Your hint is: " + spymaster.getHint() + ". You have " + guessesRemaining() + " guesses remaining!";
-        hintLabel.setText(addHtmlTags(setText));
-
-        if (guessesRemaining() > 0) {
-            // DO NOTHING
-        } else { // Stop looping for the current team and go to the next team
-            nextTeam(false);
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: If you guessed the other team's card, they get a point - immediately check if they have won
-    //          If not, go to their turn
-    private void guessWrong(String team) {
-        Operative selectedOperative;
-        printSelectedCard(team);
-
-        nextTeam(false);
-        selectedOperative = selectOperative();
-        selectedOperative.incrementScore();
-        scoreLabel.setText(getScoreLabel());
-
-        // Check if the game is won from this action
-        if (checkIfGameWon()) {
-            gameWonMessage();
-        }
-
-    }
+//    // MODIFIES: this
+//    // EFFECTS:  allows the operative to guess and changes the game-state according to their guess
+//    protected void guess(CardButton btn) {
+//        Card card = btn.getCard();
+//        card.makeVisibleTeam();
+//
+//        // Get the card associated with the guesses
+//        String selectedTeam = card.getTeam();
+//
+//        // Get the current team
+//        String currentTeam = gameBoard.getCurrentTeam();
+//
+//        // Log an event
+//        Event event = new Event("The " + currentTeam + " team selected a "
+//                + selectedTeam + " card (" + card.getWord() + ")!");
+//        eventLog.logEvent(event);
+//
+//
+//        // Depending on which card was selected
+//        if (selectedTeam.equals(ASSASSIN)) {
+//            guessAssassin();
+//        } else if (selectedTeam.equals(NEUTRAL)) {
+//            guessNeutral(selectedTeam);
+//        } else if (selectedTeam.equals(currentTeam)) {
+//            guessCorrect(selectedTeam);
+//        } else { // Selected the opposite team's card
+//            guessWrong(selectedTeam);
+//        }
+//
+//    }
+//
+//    // MODIFIES: this
+//    // EFFECTS: Write to the console that the current team loses and returns false
+//    private void guessAssassin() {
+//        String assassin = "The " + gameBoard.getCurrentTeam() + " team has selected the assassin! ";
+//        nextTeam(true); // Change the team to show that the OTHER team has won.
+//        assassin += "\nThe " + gameBoard.getCurrentTeam() + " team wins!";
+//        consoleLabel.setText(addHtmlTags(assassin));
+//
+//        // Log event
+//        Event assassinPlayed = new Event(assassin);
+//        eventLog.logEvent(assassinPlayed);
+//
+//        // Display thanks for playing message
+//        thanksForPlaying();
+//    }
+//
+//    // MODIFIES: this
+//    // EFFECTS: Write to the console that you've selected a neutral card, switches team and returns false
+//    private void guessNeutral(String team) {
+//        printSelectedCard(team);
+//        nextTeam(false);
+//    }
+//
+//
+//    // MODIFIES: this
+//    // EFFECTS: increments the score for the current team, check if this is sufficient to win (and end the game)
+//    //          otherwise, decrement the number of available guesses
+//    private void guessCorrect(String team) {
+//        Operative operative;
+//        Spymaster spymaster;
+//
+//
+//        printSelectedCard(team);
+//        operative = selectOperative();
+//        operative.incrementScore(); // Increment score
+//        scoreLabel.setText(getScoreLabel());
+//
+//        // Check if the current team has won, if yes - immediately exit
+//        if (checkIfGameWon()) {
+//            gameWonMessage();
+//        }
+//
+//        // Reduce the number of guesses for this team
+//        spymaster = selectSpymaster();
+//        spymaster.decrementGuesses();
+//
+//        String setText;
+//        setText = "Your hint is: " + spymaster.getHint() + ". You have " + guessesRemaining() + " guesses remaining!";
+//        hintLabel.setText(addHtmlTags(setText));
+//
+//        if (guessesRemaining() > 0) {
+//            // DO NOTHING
+//        } else { // Stop looping for the current team and go to the next team
+//            nextTeam(false);
+//        }
+//    }
+//
+//    // MODIFIES: this
+//    // EFFECTS: If you guessed the other team's card, they get a point - immediately check if they have won
+//    //          If not, go to their turn
+//    private void guessWrong(String team) {
+//        Operative selectedOperative;
+//        printSelectedCard(team);
+//
+//        nextTeam(false);
+//        selectedOperative = selectOperative();
+//        selectedOperative.incrementScore();
+//        scoreLabel.setText(getScoreLabel());
+//
+//        // Check if the game is won from this action
+//        if (checkIfGameWon()) {
+//            gameWonMessage();
+//        }
+//    }
 
     // MODIFIES: this
     // EFFECTS: changes which team goes next, given a false parameter print to console which team is coming next
@@ -646,7 +645,7 @@ public class CodenamesGUI {
     }
 
     // EFFECTS: get the Spymaster object whose turn it currently is
-    private Operative selectOperative() {
+    protected Operative selectOperative() {
         if (gameBoard.getCurrentTeam().equals(RED)) {
             return redOperative;
         } else {
@@ -664,7 +663,7 @@ public class CodenamesGUI {
     }
 
     // EFFECTS: Returns true if the current team has no more visible points
-    private boolean checkIfGameWon() {
+    protected boolean checkIfGameWon() {
         // Respective team has revealed all their cards
         if (gameBoard.getCurrentTeam().equals(RED)) {
             return gameBoard.getRemainingCards(RED) == 0;
@@ -675,7 +674,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: Prints the winner to the console and sets gameContinue to false
-    private void gameWonMessage() {
+    protected void gameWonMessage() {
         // Display who has won on the console
         setLabelBlank(hintLabel);
         String wonMessage = "The " + gameBoard.getCurrentTeam()

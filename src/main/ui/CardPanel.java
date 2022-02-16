@@ -1,23 +1,25 @@
 package ui;
 
-import model.Board;
-import model.Card;
+import model.*;
+import model.Event;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 
 import java.awt.*;
 
+import static model.Board.*;
 import static ui.CodenamesGUI.*;
 
 
 public class CardPanel extends JPanel {
-    private static int cardIndex = 0;
-    private static final int CARD_COLS = 5;
+    private static int cardIndex = 0;           // Counter from 0 - 24 (to associate the game's cards to a button
+    private static final int CARD_COLS = 5;     // Number of cards in per panel
     private final GridLayout cardGridLayout = new GridLayout(1, CARD_COLS);
-    private CodenamesGUI ui;
 
-    public CardPanel(CodenamesGUI ui, Board gameBoard) {
+    private CodenamesGUI ui;                    // To gain access to the guess method
+
+    public CardPanel(CodenamesGUI ui) {
         this.ui = ui;
 
         // Set-up the lay-out (1 row, 5 cards), borders and spacing
@@ -27,7 +29,7 @@ public class CardPanel extends JPanel {
         cardGridLayout.setHgap(CARD_HGAP);
         cardGridLayout.setVgap(CARD_VGAP);
 
-        createCardButtons(gameBoard);
+        createCardButtons(ui.getGameBoard());
     }
 
     // MODIFIES: this
@@ -62,9 +64,122 @@ public class CardPanel extends JPanel {
             btn.setOpaque(true);
             btn.setEnabled(false);
 
-            ui.guess(btn);
+            guess(btn);
 
         });
     }
 
+
+    // MODIFIES: this
+    // EFFECTS:  allows the operative to guess and changes the game-state according to their guess
+    private void guess(CardButton btn) {
+        Card card = btn.getCard();
+        card.makeVisibleTeam();
+
+        // Get the card associated with the guesses
+        String selectedTeam = card.getTeam();
+
+        // Get the current team
+        String currentTeam = ui.getGameBoard().getCurrentTeam();
+
+        // Log an event
+        model.Event event = new model.Event("The " + currentTeam + " team selected a "
+                + selectedTeam + " card (" + card.getWord() + ")!");
+        eventLog.logEvent(event);
+
+
+        // Depending on which card was selected
+        if (selectedTeam.equals(ASSASSIN)) {
+            guessAssassin();
+        } else if (selectedTeam.equals(NEUTRAL)) {
+            guessNeutral(selectedTeam);
+        } else if (selectedTeam.equals(currentTeam)) {
+            guessCorrect(selectedTeam);
+        } else { // Selected the opposite team's card
+            guessWrong(selectedTeam);
+        }
+
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Write to the console that the current team loses and returns false
+    private void guessAssassin() {
+        String assassin = "The " + ui.getGameBoard().getCurrentTeam() + " team has selected the assassin! ";
+        ui.nextTeam(true); // Change the team to show that the OTHER team has won.
+        assassin += "\nThe " + ui.getGameBoard().getCurrentTeam() + " team wins!";
+        consoleLabel.setText(ui.addHtmlTags(assassin));
+
+        // Log event
+        model.Event assassinPlayed = new Event(assassin);
+        eventLog.logEvent(assassinPlayed);
+
+        // Display thanks for playing message
+        ui.thanksForPlaying();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Write to the console that you've selected a neutral card, switches team and returns false
+    private void guessNeutral(String team) {
+        printSelectedCard(team);
+        ui.nextTeam(false);
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: increments the score for the current team, check if this is sufficient to win (and end the game)
+    //          otherwise, decrement the number of available guesses
+    private void guessCorrect(String team) {
+        Operative operative;
+        Spymaster spymaster;
+
+
+        printSelectedCard(team);
+        operative = ui.selectOperative();
+        operative.incrementScore(); // Increment score
+        scoreLabel.setText(ui.getScoreLabel());
+
+        // Check if the current team has won, if yes - immediately exit
+        if (ui.checkIfGameWon()) {
+            ui.gameWonMessage();
+        }
+
+        // Reduce the number of guesses for this team
+        spymaster = ui.selectSpymaster();
+        spymaster.decrementGuesses();
+
+        String setText;
+        setText = "Your hint is: " + spymaster.getHint() + ". You have "
+                + ui.guessesRemaining() + " guesses remaining!";
+        hintLabel.setText(ui.addHtmlTags(setText));
+
+        if (ui.guessesRemaining() > 0) {
+            // DO NOTHING
+        } else { // Stop looping for the current team and go to the next team
+            ui.nextTeam(false);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: If you guessed the other team's card, they get a point - immediately check if they have won
+    //          If not, go to their turn
+    private void guessWrong(String team) {
+        Operative selectedOperative;
+        printSelectedCard(team);
+
+        ui.nextTeam(false);
+        selectedOperative = ui.selectOperative();
+        selectedOperative.incrementScore();
+        scoreLabel.setText(ui.getScoreLabel());
+
+        // Check if the game is won from this action
+        if (ui.checkIfGameWon()) {
+            ui.gameWonMessage();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Prints which team's card has just been selected
+    private void printSelectedCard(String team) {
+        consoleLabel.setText(ui.addHtmlTags("You've selected a " + team + " card!"));
+    }
 }
