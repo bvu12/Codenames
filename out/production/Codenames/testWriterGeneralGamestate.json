@@ -1,0 +1,169 @@
+{
+    "currentTeam": "RED",
+    "cards": [
+        {
+            "visibleTeam": "?",
+            "index": 1,
+            "team": "RED",
+            "word": "POUND"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 2,
+            "team": "BLUE",
+            "word": "OCTOPUS"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 3,
+            "team": "RED",
+            "word": "DOG"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 4,
+            "team": "NEUTRAL",
+            "word": "KNIGHT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 5,
+            "team": "RED",
+            "word": "FILM"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 6,
+            "team": "NEUTRAL",
+            "word": "SLUG"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 7,
+            "team": "RED",
+            "word": "DAY"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 8,
+            "team": "NEUTRAL",
+            "word": "DECK"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 9,
+            "team": "NEUTRAL",
+            "word": "PENGUIN"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 10,
+            "team": "BLUE",
+            "word": "LEMON"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 11,
+            "team": "BLUE",
+            "word": "TABLET"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 12,
+            "team": "RED",
+            "word": "COVER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 13,
+            "team": "ASSASSIN",
+            "word": "EAGLE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 14,
+            "team": "BLUE",
+            "word": "HOTEL"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 15,
+            "team": "BLUE",
+            "word": "BOTTLE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 16,
+            "team": "RED",
+            "word": "PLATE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 17,
+            "team": "RED",
+            "word": "ROSE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 18,
+            "team": "RED",
+            "word": "KING"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 19,
+            "team": "BLUE",
+            "word": "LOCK"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 20,
+            "team": "NEUTRAL",
+            "word": "BEAT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 21,
+            "team": "NEUTRAL",
+            "word": "LAB"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 22,
+            "team": "BLUE",
+            "word": "OPERA"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 23,
+            "team": "BLUE",
+            "word": "IRON"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 24,
+            "team": "NEUTRAL",
+            "word": "DANCE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 25,
+            "team": "RED",
+            "word": "TRIP"
+        }
+    ],
+    "blueOperativeTeamName": "BLUE",
+    "currentPlayer": "SPYMASTER",
+    "startingTeam": "RED",
+    "redOperativeTeamName": "RED",
+    "numRedCards": 9,
+    "blueSpymasterGuesses": 0,
+    "redSpymasterTeamName": "RED",
+    "redOperativeScore": 2,
+    "blueOperativeScore": 0,
+    "numBlueCards": 8,
+    "redSpymasterHint": "A HINT!",
+    "redSpymasterGuesses": 5,
+    "blueSpymasterTeamName": "BLUE",
+    "blueSpymasterHint": ""
+}

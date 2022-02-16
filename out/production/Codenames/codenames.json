@@ -1,0 +1,169 @@
+{
+    "currentTeam": "RED",
+    "cards": [
+        {
+            "visibleTeam": "BLUE",
+            "index": 1,
+            "team": "BLUE",
+            "word": "MAIL"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 2,
+            "team": "RED",
+            "word": "TRACK"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 3,
+            "team": "NEUTRAL",
+            "word": "DEGREE"
+        },
+        {
+            "visibleTeam": "RED",
+            "index": 4,
+            "team": "RED",
+            "word": "SPIKE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 5,
+            "team": "RED",
+            "word": "DEATH"
+        },
+        {
+            "visibleTeam": "BLUE",
+            "index": 6,
+            "team": "BLUE",
+            "word": "PUMPKIN"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 7,
+            "team": "NEUTRAL",
+            "word": "SOUND"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 8,
+            "team": "NEUTRAL",
+            "word": "MAPLE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 9,
+            "team": "BLUE",
+            "word": "STREAM"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 10,
+            "team": "BLUE",
+            "word": "PHOENIX"
+        },
+        {
+            "visibleTeam": "BLUE",
+            "index": 11,
+            "team": "BLUE",
+            "word": "MATCH"
+        },
+        {
+            "visibleTeam": "BLUE",
+            "index": 12,
+            "team": "BLUE",
+            "word": "POUND"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 13,
+            "team": "NEUTRAL",
+            "word": "CONDUCTOR"
+        },
+        {
+            "visibleTeam": "RED",
+            "index": 14,
+            "team": "RED",
+            "word": "OPERA"
+        },
+        {
+            "visibleTeam": "BLUE",
+            "index": 15,
+            "team": "BLUE",
+            "word": "BERLIN"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 16,
+            "team": "NEUTRAL",
+            "word": "SWITCH"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 17,
+            "team": "NEUTRAL",
+            "word": "FIGHTER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 18,
+            "team": "NEUTRAL",
+            "word": "TOWER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 19,
+            "team": "RED",
+            "word": "OCTOPUS"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 20,
+            "team": "RED",
+            "word": "LITTER"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 21,
+            "team": "ASSASSIN",
+            "word": "CASINO"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 22,
+            "team": "BLUE",
+            "word": "CARROT"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 23,
+            "team": "RED",
+            "word": "FACE"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 24,
+            "team": "RED",
+            "word": "LION"
+        },
+        {
+            "visibleTeam": "?",
+            "index": 25,
+            "team": "RED",
+            "word": "YARD"
+        }
+    ],
+    "blueOperativeTeamName": "BLUE",
+    "currentPlayer": "SPYMASTER",
+    "startingTeam": "RED",
+    "redOperativeTeamName": "RED",
+    "numRedCards": 9,
+    "blueSpymasterGuesses": 0,
+    "redSpymasterTeamName": "RED",
+    "redOperativeScore": 2,
+    "blueOperativeScore": 5,
+    "numBlueCards": 8,
+    "redSpymasterHint": "red",
+    "redSpymasterGuesses": 4,
+    "blueSpymasterTeamName": "BLUE",
+    "blueSpymasterHint": "Blue"
+}

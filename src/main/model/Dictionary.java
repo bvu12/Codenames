@@ -1,7 +1,6 @@
 package model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 // Represents a dictionary of ~400 possible words
@@ -10,7 +9,7 @@ public class Dictionary {
     private List<String> fullDictionary;
     private int counter;                 // Return the counter index when prompted
     protected static final int SKIP = 5; // Arbitrarily skip 5 lines when parsing the dictionary
-    private static final String FILE_PATH = ".\\data\\dictionary.txt"; // Dictionary path
+//    private static final String FILE_PATH = ".\\data\\dictionary.txt"; // Dictionary path
     protected static final int NUM_DICTIONARY_WORDS = 400;               // Size of provided dictionary
 
     private Scanner scanner;
@@ -30,18 +29,35 @@ public class Dictionary {
         //  1) https://stackoverflow.com/questions/19973543/scanner-keeps-throwing-filenotfound-exception/19973734
         //  2) https://www.java67.com/2012/11/how-to-read-file-in-java-using-scanner-example.html
         //  3) https://stackoverflow.com/questions/593671/remove-end-of-line-characters-from-java-string
-        File dictionary = new File(FILE_PATH);
+//        File dictionary = new File(FILE_PATH);
+//
+//        try {
+//            this.scanner = new Scanner(dictionary).useDelimiter("\n");
+//            while (scanner.hasNext()) {
+//                fullDictionary.add(scanner.next().replaceAll("\r", ""));
+//            }
+//            scanner.close();
+//
+//        } catch (FileNotFoundException e) {
+//            System.out.println("File not found!!");
+//        }
 
+        // We use this to read information from the packaged JAR file
         try {
-            this.scanner = new Scanner(dictionary).useDelimiter("\n");
-            while (scanner.hasNext()) {
-                fullDictionary.add(scanner.next().replaceAll("\r", ""));
-            }
-            scanner.close();
+            // SOURCE: https://stackoverflow.com/questions/16953897/how-to-read-a-text-file-inside-a-jar
+            InputStream inputStream
+                    = ClassLoader.getSystemClassLoader().getSystemResourceAsStream("dictionary.txt");
+            InputStreamReader streamReader = new InputStreamReader(inputStream, "UTF-8");
+            BufferedReader in = new BufferedReader(streamReader);
 
-        } catch (FileNotFoundException e) {
+            for (String line; (line = in.readLine()) != null;) {
+                // do something with the line
+                fullDictionary.add(line.replaceAll("\r", ""));
+            }
+        } catch (IOException e) {
             System.out.println("File not found!!");
         }
+
 
     }
 

@@ -16,7 +16,8 @@ public class ActionPanel extends JPanel {
 
     private final GridLayout ctrlsGridLayout = new GridLayout(1, 3);
     private JButton revealKeyButton;
-    private JButton saveButton;
+//    private JButton saveButton;
+    private JLabel spacerLabel;
     private JButton actionButton;
 
     private CodenamesGUI ui;
@@ -44,7 +45,7 @@ public class ActionPanel extends JPanel {
     // EFFECTS: turn on the button's available to the operative
     public void updatePanelOperative() {
         revealKeyButton.setVisible(false); // Operative's do not have access to reveal key
-        saveButton.setVisible(false);   // Operative's can't save the game
+//        saveButton.setVisible(false);   // Operative's can't save the game
         actionButton.setText("End turn");
     }
 
@@ -52,7 +53,7 @@ public class ActionPanel extends JPanel {
     // EFFECTS: turn on the button's available to the spymaster
     public void updatePanelSpymaster() {
         revealKeyButton.setVisible(true);
-        saveButton.setVisible(true);
+//        saveButton.setVisible(true);
         actionButton.setText("Set hint");
     }
 
@@ -61,7 +62,8 @@ public class ActionPanel extends JPanel {
     private void createPanelButtons() {
         // Create JButtons
         revealKeyButton = new JButton("Reveal key");
-        saveButton = new JButton("Save game");
+//        saveButton = new JButton("Save game");
+        spacerLabel = new JLabel("", SwingConstants.CENTER);
         actionButton = new JButton("Set hint");
         actionButton.setBackground(new Color(131, 175, 84));
         actionButton.setOpaque(true);
@@ -71,7 +73,7 @@ public class ActionPanel extends JPanel {
     // EFFECTS: Implements the action listener for each button
     private void createActionListeners() {
         revealKeyButtonActionListener();
-        saveButtonActionListener();
+//        saveButtonActionListener();
         actionButtonActionListener();
     }
 
@@ -80,10 +82,10 @@ public class ActionPanel extends JPanel {
         revealKeyButton.addActionListener(e -> ui.revealKey("REVEAL"));
     }
 
-    // EFFECTS: Create an action listener for the Spymaster's save button
-    private void saveButtonActionListener() {
-        saveButton.addActionListener(e -> ui.saveGameState());
-    }
+//    // EFFECTS: Create an action listener for the Spymaster's save button
+//    private void saveButtonActionListener() {
+//        saveButton.addActionListener(e -> ui.saveGameState());
+//    }
 
     // MODIFIES: this
     // EFFECTS: Creates the action listener for the bottom-right action button
@@ -203,7 +205,8 @@ public class ActionPanel extends JPanel {
     // EFFECTS: mounts the buttons to the panel
     private void addToPanel() {
         add(revealKeyButton);
-        add(saveButton);
+//        add(saveButton);
+        add(spacerLabel);
         add(actionButton);
     }
 

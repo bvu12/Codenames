@@ -77,12 +77,16 @@ public class CodenamesGUI {
         // Initialize data persistence objects
         initializeDataPersistence();
 
-        // If user does not want to load from save
-        if (loadGameOrNewGame() == JOptionPane.NO_OPTION) {
-            initializeGame(getRandomStartingPlayer());
-        } else {
-            loadGameState();
-        }
+//        // If user does not want to load from save
+//        if (loadGameOrNewGame() == JOptionPane.NO_OPTION) {
+//            initializeGame(getRandomStartingPlayer());
+//        } else {
+//            loadGameState();
+//        }
+
+        // For the .jar version, we CAN load from the jar file, but we CANNOT write to the jar file
+        // TODO: Create an API that allows user to save or load?
+        initializeGame(getRandomStartingPlayer());
 
         // Initialize the EventLog
         eventLog = EventLog.getInstance();
@@ -263,7 +267,9 @@ public class CodenamesGUI {
 
         // Get the image
         try {
-            image = ImageIO.read(new File(".\\data\\thanks-for-playing.jpg"));
+//            image = ImageIO.read(new File(".\\data\\thanks-for-playing.jpg"));
+            image = ImageIO
+                    .read(ClassLoader.getSystemClassLoader().getSystemResourceAsStream("thanks-for-playing.jpg"));
 
             // Resize image
             imageWidth = image.getWidth() * 7 / 4;
