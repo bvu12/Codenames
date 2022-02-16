@@ -220,4 +220,24 @@ public class Board implements Writable {
         return jsonArray;
     }
 
+    // EFFECTS: Returns a formatted string of the current game's score
+    // EFFECTS: Returns the score to be displayed on the JLabel
+    public String getScoreText() {
+        return "<html><FONT COLOR=RED>"
+                + getRemainingCards(RED)
+                + "</FONT> - <FONT COLOR=BLUE>"
+                + getRemainingCards(BLUE)
+                + "</FONT></html>";
+    }
+
+    // EFFECTS: Returns true if the current team has no more visible points
+    public boolean checkIfGameWon() {
+        // Respective team has revealed all their cards
+        if (getCurrentTeam().equals(RED)) {
+            return getRemainingCards(RED) == 0;
+        } else {
+            return getRemainingCards(BLUE) == 0;
+        }
+    }
+
 }

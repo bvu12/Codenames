@@ -44,7 +44,7 @@ public class ConsolePanel extends JPanel {
         // Label displays the hint to the user
         hintLabel = new JLabel();
         hintLabel.setFont(new Font("Calibri",Font.PLAIN, FONT_CONSOLE));
-        hintLabel.setText(ui.hintForOperatives());
+        hintLabel.setText(hintForOperatives());
     }
 
     // MODIFIES: this
@@ -57,6 +57,11 @@ public class ConsolePanel extends JPanel {
         consoleLabel.setOpaque(true);
         consoleLabel.setBackground(Color.WHITE);
         ui.setLabelBlank(consoleLabel);
+    }
+
+    // EFFECTS: Returns a string indicating that the user needs to set a hint
+    private String hintForOperatives() {
+        return ui.addHtmlTags("Set a hint for your operatives!");
     }
 
 }

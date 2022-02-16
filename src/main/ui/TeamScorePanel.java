@@ -3,7 +3,6 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 
-import static model.Board.BLUE;
 import static model.Board.RED;
 import static ui.CodenamesGUI.*;
 
@@ -77,7 +76,8 @@ public class TeamScorePanel extends JPanel {
     private void setupScoreLabel() {
         // Label displays what is the score
         // SOURCE: https://stackoverflow.com/questions/6635730/how-do-i-put-html-in-a-jlabel-in-java
-        String scoreLabelText = ui.getScoreLabel();
+        String scoreLabelText = ui.getGameBoard().getScoreText();
+
         scoreLabel = new JLabel(scoreLabelText, SwingConstants.CENTER);
         scoreLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_SCORE));
     }

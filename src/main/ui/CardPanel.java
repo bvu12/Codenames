@@ -177,6 +177,7 @@ public class CardPanel extends JPanel {
     // EFFECTS: Write to the console that you've selected a neutral card, switches team and returns false
     private void guessNeutral(String team) {
         printSelectedCard(team);
+        teamScorePanel.getScoreLabel().setText(ui.getGameBoard().getScoreText());
         ui.nextTeam(false);
     }
 
@@ -192,10 +193,10 @@ public class CardPanel extends JPanel {
         printSelectedCard(team);
         operative = ui.selectOperative();
         operative.incrementScore(); // Increment score
-        teamScorePanel.getScoreLabel().setText(ui.getScoreLabel());
+        teamScorePanel.getScoreLabel().setText(ui.getGameBoard().getScoreText());
 
         // Check if the current team has won, if yes - immediately exit
-        if (ui.checkIfGameWon()) {
+        if (ui.getGameBoard().checkIfGameWon()) {
             ui.gameWonMessage();
         }
 
@@ -225,10 +226,10 @@ public class CardPanel extends JPanel {
         ui.nextTeam(false);
         selectedOperative = ui.selectOperative();
         selectedOperative.incrementScore();
-        teamScorePanel.getScoreLabel().setText(ui.getScoreLabel());
+        teamScorePanel.getScoreLabel().setText(ui.getGameBoard().getScoreText());
 
         // Check if the game is won from this action
-        if (ui.checkIfGameWon()) {
+        if (ui.getGameBoard().checkIfGameWon()) {
             ui.gameWonMessage();
         }
     }

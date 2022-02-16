@@ -77,10 +77,8 @@ public class CodenamesGUI {
         // Initialize data persistence objects
         initializeDataPersistence();
 
-        int reply = loadGameOrNewGame();
-
         // If user does not want to load from save
-        if (reply == JOptionPane.NO_OPTION) {
+        if (loadGameOrNewGame() == JOptionPane.NO_OPTION) {
             initializeGame(getRandomStartingPlayer());
         } else {
             loadGameState();
@@ -172,25 +170,12 @@ public class CodenamesGUI {
         // Create the cards and add to the panel
         for (int i = 0; i < 5; i++) {
             cardPanels.add(new CardPanel(this));
-
             mainPanel.add(cardPanels.get(i));
         }
 
         // On initialization, deactivate the cards
         revealKey("DEACTIVATE");
     }
-
-
-    // SOURCE: https://stackoverflow.com/questions/144892/how-to-center-a-window-in-java
-    // MODIFIES: this
-    // EFFECTS: centres the created JFrame on the screen
-    private void centreWindow() {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-        frame.setLocation(x, y);
-    }
-
 
     // MODIFIES: this
     // EFFECTS: creates the buttons associated with both Spymaster and Operative actions
@@ -201,24 +186,38 @@ public class CodenamesGUI {
         mainPanel.add(actionPanel);
     }
 
-    // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
     // MODIFIES: this
-    // EFFECTS: If action is "REVEAL", reveal the colour of each card
-    //          Else if action is "CONCEAL", reset the colour of each that not yet visible
-    //          Else deactivate the card
-    protected void revealKey(String action) {
-        for (CardPanel cp : cardPanels) {
-            cp.revealPanel(action);
-        }
+    // EFFECTS: Creates custom close behaviour so that the event log is printed to the console and then closed
+    // SOURCE: https://stackoverflow.com/questions/15778813/how-to-perform-a-task-before-a-window-frame-is-closed
+    private void frameCloseBehaviour() {
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                // The window is closing
+                printEventLog();
+                frame.dispose();
+            }
+        });
+
     }
 
-    // EFFECTS: Returns the score to be displayed on the JLabel
-    protected String getScoreLabel() {
-        return "<html><FONT COLOR=RED>"
-                + gameBoard.getRemainingCards(RED)
-                + "</FONT> - <FONT COLOR=BLUE>"
-                + gameBoard.getRemainingCards(BLUE)
-                + "</FONT></html>";
+    // MODIFIES:this
+    // EFFECTS: Makes the JFrame visible, not resizeable and centre on the screen
+    private void frameVisibleBehaviour() {
+        frame.pack();
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setVisible(true);
+        frame.setResizable(false);
+        centreWindow();
+    }
+
+    // SOURCE: https://stackoverflow.com/questions/144892/how-to-center-a-window-in-java
+    // MODIFIES: this
+    // EFFECTS: centres the created JFrame on the screen
+    private void centreWindow() {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
     }
 
     // MODIFIES: this
@@ -289,6 +288,17 @@ public class CodenamesGUI {
 
     }
 
+    // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
+    // MODIFIES: this
+    // EFFECTS: If action is "REVEAL", reveal the colour of each card
+    //          Else if action is "CONCEAL", reset the colour of each that not yet visible
+    //          Else deactivate the card
+    protected void revealKey(String action) {
+        for (CardPanel cp : cardPanels) {
+            cp.revealPanel(action);
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: Sets the label to blank
     protected void setLabelBlank(JLabel jl) {
@@ -296,37 +306,12 @@ public class CodenamesGUI {
     }
 
     // MODIFIES: this
-    // EFFECTS: Creates custom close behaviour so that the event log is printed to the console and then closed
-    // SOURCE: https://stackoverflow.com/questions/15778813/how-to-perform-a-task-before-a-window-frame-is-closed
-    private void frameCloseBehaviour() {
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                // The window is closing
-                printEventLog();
-                frame.dispose();
-            }
-        });
-
-    }
-
-    // MODIFIES:this
-    // EFFECTS: Makes the JFrame visible, not resizeable and centre on the screen
-    private void frameVisibleBehaviour() {
-        frame.pack();
-        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        centreWindow();
-    }
-
-    // MODIFIES: this
     // EFFECTS: initializes the game board, spymasters and operatives
     private void initializeGame(String startingPlayer) {
         initializeGameBoard(startingPlayer);
 
-
+        // Initialize game objects
         gameBoard.setCurrentTeam(startingPlayer);
-
         redSpymaster = new Spymaster(RED);
         blueSpymaster = new Spymaster(BLUE);
         redOperative = new Operative(RED);
@@ -348,9 +333,8 @@ public class CodenamesGUI {
 
 
     // MODIFIES: this
-    // EFFECTS: changes which team goes next, given a false parameter print to console which team is coming next
+    // EFFECTS: changes which team goes next, if !supressPrint parameter then print to console which team is coming next
     protected void nextTeam(boolean suppressPrint) {
-//        hintLabel.setText(hintForOperatives());
         revealKey("DEACTIVATE");
 
         if (gameBoard.getCurrentTeam().equals(RED)) {
@@ -358,12 +342,12 @@ public class CodenamesGUI {
             teamScorePanel.getTeamLabel().setText(BLUE);
         } else {
             gameBoard.setCurrentTeam(RED);
-            teamScorePanel.getScoreLabel().setText(RED);
+            teamScorePanel.getTeamLabel().setText(RED);
         }
 
         updatePlayer();      // Go to next player
-        teamScorePanel.setTeamLabelText();  // Update the label
-        teamScorePanel.setTeamLabelColour();// Update the label's colour
+        teamScorePanel.setTeamLabelText();      // Update the label
+        teamScorePanel.setTeamLabelColour();    // Update the label's colour
 
         if (!suppressPrint) {
             consolePanel.getHintLabel().setText(addHtmlTags("Switching to the "
@@ -399,16 +383,6 @@ public class CodenamesGUI {
             return redSpymaster;
         } else {
             return blueSpymaster;
-        }
-    }
-
-    // EFFECTS: Returns true if the current team has no more visible points
-    protected boolean checkIfGameWon() {
-        // Respective team has revealed all their cards
-        if (gameBoard.getCurrentTeam().equals(RED)) {
-            return gameBoard.getRemainingCards(RED) == 0;
-        } else {
-            return gameBoard.getRemainingCards(BLUE) == 0;
         }
     }
 
@@ -518,11 +492,6 @@ public class CodenamesGUI {
                     "FILE NOT FOUND",
                     JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    // EFFECTS: Returns a string indicating that the user needs to set a hint
-    protected String hintForOperatives() {
-        return addHtmlTags("Set a hint for your operatives!");
     }
 
     // EFFECTS: iterates over the event log and prints all events
