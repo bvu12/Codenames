@@ -24,9 +24,8 @@ import static model.Board.*;
 public class CodenamesGUI {
 
     // Frame sizes
-    private static int FRAME_WIDTH;
+    protected static int FRAME_WIDTH;
     private static int FRAME_HEIGHT;
-    private static final int CARD_ROWS = 5;
     protected static int CARD_BRDR;
     protected static int CARD_HGAP;
     protected static int CARD_VGAP;
@@ -36,7 +35,7 @@ public class CodenamesGUI {
     // Font sizes
     private static int FONT_SCORE;
     private static int FONT_TEAM_INFO;
-    private static int FONT_CONSOLE;
+    protected static int FONT_CONSOLE;
     protected static int FONT_CARDS;
 
     // Main JFrame
@@ -49,7 +48,7 @@ public class CodenamesGUI {
     protected static JLabel scoreLabel;
 
     // Hint and console panels that output text to the user
-    private JPanel consolePanel;
+    private ConsolePanel consolePanel;
     protected static JLabel hintLabel;
     protected static JLabel consoleLabel;
 
@@ -63,8 +62,6 @@ public class CodenamesGUI {
     // Panels that hold the action buttons for the user
     private ActionPanel actionPanel;
 
-//    protected static final GridLayout cardGridLayout = new GridLayout(1, CARD_COLS);
-//    private final GridLayout ctrlsGridLayout = new GridLayout(1, 3);
 
     // Data persistence
     private static final String JSON_STORE = "./data/codenames.json";
@@ -77,7 +74,6 @@ public class CodenamesGUI {
     protected static Spymaster blueSpymaster;
     protected static Operative redOperative;
     protected static Operative blueOperative;
-    private String hint;
 
     // Event log
     protected static EventLog eventLog;
@@ -200,30 +196,9 @@ public class CodenamesGUI {
     // EFFECTS: Create both the hint and console labels
     private void setupConsolePanel() {
         // CONSOLE
-        consolePanel = new JPanel();
-        Border consoleBorder = BorderFactory.createEmptyBorder(CTRLS_BRDR / 2, CTRLS_BRDR, CTRLS_BRDR / 2, CTRLS_BRDR);
-        consolePanel.setBorder(consoleBorder);
-        consolePanel.setLayout(new GridLayout(2, 1));
-
-        // Label displays the hint to the user
-        hintLabel = new JLabel();
-        hintLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_CONSOLE));
-        hintLabel.setText(hintForOperatives());
-
-        // Label displays game information to the user
-        consoleLabel = new JLabel();
-        consoleLabel.setFont(new Font("Calibri", Font.BOLD, FONT_CONSOLE));
-        consoleLabel.setVerticalAlignment(JLabel.CENTER);
-        consoleLabel.setOpaque(true);
-        consoleLabel.setBackground(Color.WHITE);
-        setLabelBlank(consoleLabel);
-
-
-        consolePanel.setPreferredSize(new Dimension(FRAME_WIDTH, 50));
-
-        // Add labels to the panel and the panel to the main panel
-        consolePanel.add(hintLabel);
-        consolePanel.add(consoleLabel);
+        consolePanel = new ConsolePanel(this);
+        hintLabel = consolePanel.getHintLabel();
+        consoleLabel = consolePanel.getConsoleLabel();
         mainPanel.add(consolePanel);
     }
 
@@ -348,13 +323,6 @@ public class CodenamesGUI {
     protected void setTeamLabelText() {
         teamLabel.setText(addHtmlTags(gameBoard.getCurrentTeam() + " " + gameBoard.getCurrentPlayer()));
     }
-
-//    // MODIFIES: this
-//    // EFFECTS: Prints which team's card has just been selected
-//    private void printSelectedCard(String team) {
-//        consoleLabel.setText(addHtmlTags("You've selected a " + team + " card!"));
-//    }
-
 
     // EFFECTS: Returns the score to be displayed on the JLabel
     protected String getScoreLabel() {
@@ -502,111 +470,6 @@ public class CodenamesGUI {
         gameBoard.setBoardIndices();
     }
 
-//    // MODIFIES: this
-//    // EFFECTS:  allows the operative to guess and changes the game-state according to their guess
-//    protected void guess(CardButton btn) {
-//        Card card = btn.getCard();
-//        card.makeVisibleTeam();
-//
-//        // Get the card associated with the guesses
-//        String selectedTeam = card.getTeam();
-//
-//        // Get the current team
-//        String currentTeam = gameBoard.getCurrentTeam();
-//
-//        // Log an event
-//        Event event = new Event("The " + currentTeam + " team selected a "
-//                + selectedTeam + " card (" + card.getWord() + ")!");
-//        eventLog.logEvent(event);
-//
-//
-//        // Depending on which card was selected
-//        if (selectedTeam.equals(ASSASSIN)) {
-//            guessAssassin();
-//        } else if (selectedTeam.equals(NEUTRAL)) {
-//            guessNeutral(selectedTeam);
-//        } else if (selectedTeam.equals(currentTeam)) {
-//            guessCorrect(selectedTeam);
-//        } else { // Selected the opposite team's card
-//            guessWrong(selectedTeam);
-//        }
-//
-//    }
-//
-//    // MODIFIES: this
-//    // EFFECTS: Write to the console that the current team loses and returns false
-//    private void guessAssassin() {
-//        String assassin = "The " + gameBoard.getCurrentTeam() + " team has selected the assassin! ";
-//        nextTeam(true); // Change the team to show that the OTHER team has won.
-//        assassin += "\nThe " + gameBoard.getCurrentTeam() + " team wins!";
-//        consoleLabel.setText(addHtmlTags(assassin));
-//
-//        // Log event
-//        Event assassinPlayed = new Event(assassin);
-//        eventLog.logEvent(assassinPlayed);
-//
-//        // Display thanks for playing message
-//        thanksForPlaying();
-//    }
-//
-//    // MODIFIES: this
-//    // EFFECTS: Write to the console that you've selected a neutral card, switches team and returns false
-//    private void guessNeutral(String team) {
-//        printSelectedCard(team);
-//        nextTeam(false);
-//    }
-//
-//
-//    // MODIFIES: this
-//    // EFFECTS: increments the score for the current team, check if this is sufficient to win (and end the game)
-//    //          otherwise, decrement the number of available guesses
-//    private void guessCorrect(String team) {
-//        Operative operative;
-//        Spymaster spymaster;
-//
-//
-//        printSelectedCard(team);
-//        operative = selectOperative();
-//        operative.incrementScore(); // Increment score
-//        scoreLabel.setText(getScoreLabel());
-//
-//        // Check if the current team has won, if yes - immediately exit
-//        if (checkIfGameWon()) {
-//            gameWonMessage();
-//        }
-//
-//        // Reduce the number of guesses for this team
-//        spymaster = selectSpymaster();
-//        spymaster.decrementGuesses();
-//
-//        String setText;
-//        setText = "Your hint is: " + spymaster.getHint() + ". You have " + guessesRemaining() + " guesses remaining!";
-//        hintLabel.setText(addHtmlTags(setText));
-//
-//        if (guessesRemaining() > 0) {
-//            // DO NOTHING
-//        } else { // Stop looping for the current team and go to the next team
-//            nextTeam(false);
-//        }
-//    }
-//
-//    // MODIFIES: this
-//    // EFFECTS: If you guessed the other team's card, they get a point - immediately check if they have won
-//    //          If not, go to their turn
-//    private void guessWrong(String team) {
-//        Operative selectedOperative;
-//        printSelectedCard(team);
-//
-//        nextTeam(false);
-//        selectedOperative = selectOperative();
-//        selectedOperative.incrementScore();
-//        scoreLabel.setText(getScoreLabel());
-//
-//        // Check if the game is won from this action
-//        if (checkIfGameWon()) {
-//            gameWonMessage();
-//        }
-//    }
 
     // MODIFIES: this
     // EFFECTS: changes which team goes next, given a false parameter print to console which team is coming next
@@ -781,7 +644,7 @@ public class CodenamesGUI {
     }
 
     // EFFECTS: Returns a string indicating that the user needs to set a hint
-    private String hintForOperatives() {
+    protected String hintForOperatives() {
         return addHtmlTags("Set a hint for your operatives!");
     }
 
