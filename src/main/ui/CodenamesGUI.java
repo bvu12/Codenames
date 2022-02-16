@@ -21,44 +21,50 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.Integer.parseInt;
+import static java.lang.Integer.*;
 import static model.Board.*;
 
 public class CodenamesGUI {
 
-    private static final int FRAME_WIDTH = 1500;
-    private static final int FRAME_HEIGHT = (int) (FRAME_WIDTH * 0.8);
+    // Frame sizes
+    private static int FRAME_WIDTH;
+    private static int FRAME_HEIGHT;
     private static final int CARD_ROWS = 5;
     private static final int CARD_COLS = 5;
-    private static final int CARD_BRDR = 20;
-    private static final int CARD_HGAP = 20;
-    private static final int CARD_VGAP = 20;
-    private static final int CTRLS_BRDR = 45;
-    private static final int CTRLS_HGAP = 100;
+    private static int CARD_BRDR;
+    private static int CARD_HGAP;
+    private static int CARD_VGAP;
+    private static int CTRLS_BRDR;
+    private static  int CTRLS_HGAP;
 
+    // Font sizes
+    private static int FONT_SCORE;
+    private static int FONT_TEAM_INFO;
+    private static int FONT_CONSOLE;
+    private static int FONT_CARDS;
 
-    // JFrame
+    // Main JFrame
     private final JFrame frame;
     private final JPanel mainPanel;
 
-    // Team and score
+    // Team and score panels
     private JPanel topPanel;
     private JLabel teamLabel;
     private JLabel scoreLabel;
 
-    // Hint and console text output to the user
+    // Hint and console panels that output text to the user
     private JPanel consolePanel;
     private JLabel hintLabel;
     private JLabel consoleLabel;
 
-    // 25 cards
+    // Card panels that hold the 25 cards in play
     private JPanel cardPanel1;
     private JPanel cardPanel2;
     private JPanel cardPanel3;
     private JPanel cardPanel4;
     private JPanel cardPanel5;
 
-    // Action buttons for the user
+    // Panels that hold the action buttons for the user
     private JPanel controlsPanel;
     private JButton revealKeyButton;
     private JButton saveButton;
@@ -84,6 +90,9 @@ public class CodenamesGUI {
     private EventLog eventLog;
 
     public CodenamesGUI() {
+        // Initialize the screen size
+        initializeScreenSize();
+
         // Initialize data persistence objects
         initializeDataPersistence();
 
@@ -99,7 +108,6 @@ public class CodenamesGUI {
         // Initialize the EventLog
         eventLog = EventLog.getInstance();
         logCards();
-
 
         // Initialize JFrame
         frame = new JFrame();
@@ -124,6 +132,28 @@ public class CodenamesGUI {
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameCloseBehaviour();
         frameVisibleBehaviour();
+    }
+
+    // EFFECTS: Updates the height and width variables according the users' screen size
+    private void initializeScreenSize() {
+        // Frame size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        FRAME_WIDTH = (int) (screenSize.width * 0.7);
+        FRAME_HEIGHT =  min((int) (FRAME_WIDTH * 0.8), (int) (screenSize.height * 0.8));
+
+        // Font
+        FONT_SCORE = FRAME_WIDTH / 25;
+        FONT_TEAM_INFO = FONT_SCORE * 2 / 3;
+        FONT_CONSOLE = FONT_SCORE * 2 / 5;
+        FONT_CARDS = FONT_SCORE / 2;
+
+        // Frame variables
+        CARD_BRDR = FRAME_WIDTH / 60;
+        CARD_HGAP = FRAME_WIDTH / 60;
+        CARD_VGAP = FRAME_WIDTH / 60;
+        CTRLS_BRDR = FRAME_WIDTH / 50;
+        CTRLS_HGAP = FRAME_WIDTH / 15;
+
     }
 
     // SOURCE: https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
@@ -155,14 +185,14 @@ public class CodenamesGUI {
         // Label displays which team is it
         teamLabel = new JLabel(addHtmlTags(gameBoard.getCurrentTeam()
                 + " " + gameBoard.getCurrentPlayer()), SwingConstants.CENTER);
-        teamLabel.setFont(new Font("Calibri", Font.PLAIN, 40));
+        teamLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_TEAM_INFO));
         setTeamLabelColour();
 
         // Label displays what is the score
         // SOURCE: https://stackoverflow.com/questions/6635730/how-do-i-put-html-in-a-jlabel-in-java
         String scoreLabelText = getScoreLabel();
         scoreLabel = new JLabel(scoreLabelText, SwingConstants.CENTER);
-        scoreLabel.setFont(new Font("Calibri", Font.PLAIN, 60));
+        scoreLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_SCORE));
 
         // Blank label for styling purposes
         JLabel spacerLabel = new JLabel("", SwingConstants.CENTER);
@@ -185,12 +215,12 @@ public class CodenamesGUI {
 
         // Label displays the hint to the user
         hintLabel = new JLabel();
-        hintLabel.setFont(new Font("Calibri", Font.PLAIN, 24));
+        hintLabel.setFont(new Font("Calibri", Font.PLAIN, FONT_CONSOLE));
         hintLabel.setText(hintForOperatives());
 
         // Label displays game information to the user
         consoleLabel = new JLabel();
-        consoleLabel.setFont(new Font("Calibri", Font.BOLD, 24));
+        consoleLabel.setFont(new Font("Calibri", Font.BOLD, FONT_CONSOLE));
         consoleLabel.setVerticalAlignment(JLabel.CENTER);
         consoleLabel.setOpaque(true);
         consoleLabel.setBackground(Color.WHITE);
@@ -247,7 +277,7 @@ public class CodenamesGUI {
             // JButton
             // SOURCE: https://docs.oracle.com/javase/tutorial/uiswing/layout/grid.html
             CardButton btn = new CardButton(card);
-            btn.setFont(new Font("Arial", Font.BOLD, 32));
+            btn.setFont(new Font("Arial", Font.BOLD, FONT_CARDS));
             btn.setEnabled(false);
 
             // Create action listener's associated with each card
@@ -346,7 +376,7 @@ public class CodenamesGUI {
                 String hintContext;
                 hintContext = "<html>Give a hint to your operatives!<br><br>"
                         + "Specify your one-word clue and # of guesses with a single / between,"
-                        + "for example:<br><em>&nbsp;&nbsp;&nbsp;Clue / 3</em></html>";
+                        + " for example:<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Clue / 3</em></html>";
                 hint = JOptionPane.showInputDialog(hintContext);
 
                 // Tell user if the hint is invalid
@@ -445,7 +475,7 @@ public class CodenamesGUI {
     // MODIFIES: this
     // EFFECTS: Updates the label indicating which team/player's turn it is
     private void setTeamLabelText() {
-        teamLabel.setText(addHtmlTags(teamLabel.getText().split(" ", 2)[0] + " " + gameBoard.getCurrentPlayer()));
+        teamLabel.setText(addHtmlTags(gameBoard.getCurrentTeam() + " " + gameBoard.getCurrentPlayer()));
     }
 
     // MODIFIES: this
@@ -568,7 +598,7 @@ public class CodenamesGUI {
     // EFFECTS: Makes the JFrame visible, not resizeable and centre on the screen
     private void frameVisibleBehaviour() {
         frame.pack();
-        frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
         frame.setVisible(true);
         frame.setResizable(false);
         centreWindow();
