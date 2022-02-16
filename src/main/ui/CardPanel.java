@@ -32,6 +32,61 @@ public class CardPanel extends JPanel {
         createCardButtons(ui.getGameBoard());
     }
 
+    // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
+    // MODIFIES: this
+    // EFFECTS: If action is "REVEAL", reveal the colour of each card
+    //          Else if action is "CONCEAL", reset the colour of each that not yet visible
+    //          Else deactivate the card
+    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
+    public void revealPanel(String action) {
+        // SOURCE: https://stackoverflow.com/questions/18704904/swing-using-getcomponent-to-update-all-jbuttons/18705604
+        // Loop through all components of jp
+        for (Component component : this.getComponents()) {
+            // If it is a CardButton (i.e. a card in the game)
+            if (component instanceof JButton) {
+                CardButton btn = (CardButton) component;
+                Card card = btn.getCard();
+                // If we want to reveal cards
+                if (action.equals("REVEAL")) {
+                    String setText;
+                    setText = "Cards with a BLACK border are not yet revealed!";
+                    setText += " Provide a hint to your operatives to proceed!";
+                    consoleLabel.setText(ui.addHtmlTags(setText));
+
+                    // If the card is NOT yet in play, add a border for enhanced visibility
+                    if (!card.isVisibleTeam()) {
+                        setButtonBorder(btn, 7);
+                    }
+
+                    // Reveal the correct colour of each card
+                    btn.setBackground(card.getCardColor());
+
+                    // Make sure the Spymaster can't access the card in the revealed key state
+                    btn.setEnabled(false);
+                } else if (action.equals("CONCEAL")) { // If we want to conceal the cards
+                    consoleLabel.setText(ui.addHtmlTags("Press on any card to reveal it!"));
+
+                    // Remove borders
+                    btn.setBorder(null);
+
+                    // For cards not yet revealed, conceal them
+                    if (!card.isVisibleTeam()) {
+                        btn.setBackground(new JButton().getBackground());
+                        btn.setEnabled(true);
+                    }
+                } else { // DEACTIVATE
+                    setButtonBorder(btn, 1);
+                    btn.setEnabled(false);
+
+                    if (card.isVisibleTeam()) {
+                        btn.setBackground(card.getCardColor());
+                    }
+
+                }
+            }
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: Creates 5 JButtons that act as the game's cards for this particular panel
     private void createCardButtons(Board gameBoard) {
@@ -181,5 +236,11 @@ public class CardPanel extends JPanel {
     // EFFECTS: Prints which team's card has just been selected
     private void printSelectedCard(String team) {
         consoleLabel.setText(ui.addHtmlTags("You've selected a " + team + " card!"));
+    }
+
+    // MODIFIES: jb
+    // EFFECTS: Sets the border of jb to a thickness of thickness
+    private void setButtonBorder(JButton jb, int thickness) {
+        jb.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
     }
 }

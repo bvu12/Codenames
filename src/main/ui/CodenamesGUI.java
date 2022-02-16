@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Integer.*;
@@ -53,11 +54,7 @@ public class CodenamesGUI {
     protected static JLabel consoleLabel;
 
     // Card panels that hold the 25 cards in play
-    private CardPanel cardPanel1;
-    private CardPanel cardPanel2;
-    private CardPanel cardPanel3;
-    private CardPanel cardPanel4;
-    private CardPanel cardPanel5;
+    private ArrayList<CardPanel> cardPanels;
 
     // Panels that hold the action buttons for the user
     private ActionPanel actionPanel;
@@ -205,18 +202,14 @@ public class CodenamesGUI {
     // MODIFIES: this
     // EFFECTS: Creates the five panels that make-up the 25 cards to be displayed
     private void setupCardPanel() {
-        // Create the cards and add to the panel
-        cardPanel1 = new CardPanel(this);
-        cardPanel2 = new CardPanel(this);
-        cardPanel3 = new CardPanel(this);
-        cardPanel4 = new CardPanel(this);
-        cardPanel5 = new CardPanel(this);
+        cardPanels = new ArrayList<>();
 
-        mainPanel.add(cardPanel1);
-        mainPanel.add(cardPanel2);
-        mainPanel.add(cardPanel3);
-        mainPanel.add(cardPanel4);
-        mainPanel.add(cardPanel5);
+        // Create the cards and add to the panel
+        for (int i = 0; i < 5; i++) {
+            cardPanels.add(new CardPanel(this));
+
+            mainPanel.add(cardPanels.get(i));
+        }
 
         // On initialization, deactivate the cards
         revealKey("DEACTIVATE");
@@ -249,73 +242,11 @@ public class CodenamesGUI {
     //          Else if action is "CONCEAL", reset the colour of each that not yet visible
     //          Else deactivate the card
     protected void revealKey(String action) {
-        revealPanel(cardPanel1, action);
-        revealPanel(cardPanel2, action);
-        revealPanel(cardPanel3, action);
-        revealPanel(cardPanel4, action);
-        revealPanel(cardPanel5, action);
-    }
-
-    // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
-    // MODIFIES: this
-    // EFFECTS: If action is "REVEAL", reveal the colour of each card
-    //          Else if action is "CONCEAL", reset the colour of each that not yet visible
-    //          Else deactivate the card
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
-    private void revealPanel(JPanel jp, String action) {
-        // SOURCE: https://stackoverflow.com/questions/18704904/swing-using-getcomponent-to-update-all-jbuttons/18705604
-        // Loop through all components of jp
-        for (Component component : jp.getComponents()) {
-            // If it is a CardButton (i.e. a card in the game)
-            if (component instanceof JButton) {
-                CardButton btn = (CardButton) component;
-                Card card = btn.getCard();
-                // If we want to reveal cards
-                if (action.equals("REVEAL")) {
-                    String setText;
-                    setText = "Cards with a BLACK border are not yet revealed!";
-                    setText += " Provide a hint to your operatives to proceed!";
-                    consoleLabel.setText(addHtmlTags(setText));
-
-                    // If the card is NOT yet in play, add a border for enhanced visibility
-                    if (!card.isVisibleTeam()) {
-                        setButtonBorder(btn, 7);
-                    }
-
-                    // Reveal the correct colour of each card
-                    btn.setBackground(card.getCardColor());
-
-                    // Make sure the Spymaster can't access the card in the revealed key state
-                    btn.setEnabled(false);
-                } else if (action.equals("CONCEAL")) { // If we want to conceal the cards
-                    consoleLabel.setText(addHtmlTags("Press on any card to reveal it!"));
-
-                    // Remove borders
-                    btn.setBorder(null);
-
-                    // For cards not yet revealed, conceal them
-                    if (!card.isVisibleTeam()) {
-                        btn.setBackground(new JButton().getBackground());
-                        btn.setEnabled(true);
-                    }
-                } else { // DEACTIVATE
-                    setButtonBorder(btn, 1);
-                    btn.setEnabled(false);
-
-                    if (card.isVisibleTeam()) {
-                        btn.setBackground(card.getCardColor());
-                    }
-
-                }
-            }
+        for (CardPanel cp : cardPanels) {
+            cp.revealPanel(action);
         }
     }
 
-    // MODIFIES: jb
-    // EFFECTS: Sets the border of jb to a thickness of thickness
-    private void setButtonBorder(JButton jb, int thickness) {
-        jb.setBorder(BorderFactory.createLineBorder(Color.BLACK, thickness));
-    }
 
 
     // MODIFIES: this
