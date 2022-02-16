@@ -9,7 +9,6 @@ import persistence.JsonWriter;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -18,8 +17,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.Integer.*;
 import static model.Board.*;
@@ -33,8 +30,8 @@ public class CodenamesGUI {
     protected static int CARD_BRDR;
     protected static int CARD_HGAP;
     protected static int CARD_VGAP;
-    private static int CTRLS_BRDR;
-    private static int CTRLS_HGAP;
+    protected static int CTRLS_BRDR;
+    protected static int CTRLS_HGAP;
 
     // Font sizes
     private static int FONT_SCORE;
@@ -43,34 +40,31 @@ public class CodenamesGUI {
     protected static int FONT_CARDS;
 
     // Main JFrame
-    private final JFrame frame;
+    protected static JFrame frame;
     private final JPanel mainPanel;
 
     // Team and score panels
     private JPanel topPanel;
-    private JLabel teamLabel;
+    protected static JLabel teamLabel;
     private JLabel scoreLabel;
 
     // Hint and console panels that output text to the user
     private JPanel consolePanel;
-    private JLabel hintLabel;
-    private JLabel consoleLabel;
+    protected static JLabel hintLabel;
+    protected static JLabel consoleLabel;
 
     // Card panels that hold the 25 cards in play
-    private JPanel cardPanel1;
-    private JPanel cardPanel2;
-    private JPanel cardPanel3;
-    private JPanel cardPanel4;
-    private JPanel cardPanel5;
+    private CardPanel cardPanel1;
+    private CardPanel cardPanel2;
+    private CardPanel cardPanel3;
+    private CardPanel cardPanel4;
+    private CardPanel cardPanel5;
 
     // Panels that hold the action buttons for the user
-    private JPanel controlsPanel;
-    private JButton revealKeyButton;
-    private JButton saveButton;
-    private JButton actionButton;
+    private ActionPanel actionPanel;
 
 //    protected static final GridLayout cardGridLayout = new GridLayout(1, CARD_COLS);
-    private final GridLayout ctrlsGridLayout = new GridLayout(1, 3);
+//    private final GridLayout ctrlsGridLayout = new GridLayout(1, 3);
 
     // Data persistence
     private static final String JSON_STORE = "./data/codenames.json";
@@ -237,11 +231,11 @@ public class CodenamesGUI {
     // EFFECTS: Creates the five panels that make-up the 25 cards to be displayed
     private void setupCardPanel() {
         // Create the cards and add to the panel
-        cardPanel1 = new CardPanel(this, gameBoard);
-        cardPanel2 = new CardPanel(this, gameBoard);
-        cardPanel3 = new CardPanel(this, gameBoard);
-        cardPanel4 = new CardPanel(this, gameBoard);
-        cardPanel5 = new CardPanel(this, gameBoard);
+        cardPanel1 = new CardPanel(this);
+        cardPanel2 = new CardPanel(this);
+        cardPanel3 = new CardPanel(this);
+        cardPanel4 = new CardPanel(this);
+        cardPanel5 = new CardPanel(this);
 
         mainPanel.add(cardPanel1);
         mainPanel.add(cardPanel2);
@@ -270,71 +264,8 @@ public class CodenamesGUI {
     //          Spymaster - Reveal key, save game, set hint
     //          Operative - End turn
     private void setupActionPanel() {
-        // Create panel
-        controlsPanel = new JPanel();
-        controlsPanel.setBorder(BorderFactory.createEmptyBorder(CTRLS_BRDR, CTRLS_BRDR, CTRLS_BRDR, CTRLS_BRDR));
-        controlsPanel.setLayout(ctrlsGridLayout);
-        ctrlsGridLayout.setHgap(CTRLS_HGAP);
-
-        // Create JButtons
-        revealKeyButton = new JButton("Reveal key");
-        saveButton = new JButton("Save game");
-        actionButton = new JButton("Set hint");
-        actionButton.setBackground(new Color(131, 175, 84));
-        actionButton.setOpaque(true);
-
-        // Create action listeners for the buttons
-        revealKeyButtonActionListener();
-        saveButtonActionListener();
-        actionButtonActionListener();
-
-        // Add buttons to panel and then panel to the main panel
-        controlsPanel.add(revealKeyButton);
-        controlsPanel.add(saveButton);
-        controlsPanel.add(actionButton);
-
-        mainPanel.add(controlsPanel);
-    }
-
-    // EFFECTS: Creates an action listener for the Spymaster's reveal button
-    private void revealKeyButtonActionListener() {
-        revealKeyButton.addActionListener(e -> revealKey("REVEAL"));
-    }
-
-    // EFFECTS: Create an action listener for the Spymaster's save button
-    private void saveButtonActionListener() {
-        saveButton.addActionListener(e -> saveGameState());
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Creates the action listener for the bottom-right action button
-    private void actionButtonActionListener() {
-        actionButton.addActionListener(e -> {
-            // Spymaster functionality
-            if (teamLabel.getText().contains("SPYMASTER")) {
-                // Ask the user for input
-                String hintContext;
-                hintContext = "<html>Give a hint to your operatives!<br><br>"
-                        + "Specify your one-word clue and # of guesses with a single / between,"
-                        + " for example:<br><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Clue / 3</em></html>";
-                hint = JOptionPane.showInputDialog(hintContext);
-
-                // Tell user if the hint is invalid
-                if (!validHint(hint, selectSpymaster())) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Your hint is invalid. Try again!",
-                            "INVALID HINT",
-                            JOptionPane.WARNING_MESSAGE);
-                } else { // Valid hint provided, switch to Operative's turn
-                    updatePlayer();
-                    setTeamLabelText();
-                    revealKey("CONCEAL");
-                }
-            } else { // Operative's action is to end their turn
-                nextTeam(false);
-                setLabelBlank(consoleLabel);
-            }
-        });
+        actionPanel = new ActionPanel(this);
+        mainPanel.add(actionPanel);
     }
 
     // REQUIRES: action is one of "REVEAL", "CONCEAL" or "DEACTIVATE"
@@ -342,7 +273,7 @@ public class CodenamesGUI {
     // EFFECTS: If action is "REVEAL", reveal the colour of each card
     //          Else if action is "CONCEAL", reset the colour of each that not yet visible
     //          Else deactivate the card
-    private void revealKey(String action) {
+    protected void revealKey(String action) {
         revealPanel(cardPanel1, action);
         revealPanel(cardPanel2, action);
         revealPanel(cardPanel3, action);
@@ -414,7 +345,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: Updates the label indicating which team/player's turn it is
-    private void setTeamLabelText() {
+    protected void setTeamLabelText() {
         teamLabel.setText(addHtmlTags(gameBoard.getCurrentTeam() + " " + gameBoard.getCurrentPlayer()));
     }
 
@@ -516,7 +447,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: Sets the label to blank
-    private void setLabelBlank(JLabel jl) {
+    protected void setLabelBlank(JLabel jl) {
         jl.setText(addHtmlTags(""));
     }
 
@@ -680,7 +611,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: changes which team goes next, given a false parameter print to console which team is coming next
-    private void nextTeam(boolean suppressPrint) {
+    protected void nextTeam(boolean suppressPrint) {
 //        hintLabel.setText(hintForOperatives());
         revealKey("DEACTIVATE");
 
@@ -704,17 +635,13 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS: If the current player is a SPYMASTER, change to OPERATIVE and vice-versa
-    private void updatePlayer() {
+    protected void updatePlayer() {
         if (gameBoard.getCurrentPlayer().equals("SPYMASTER")) {
             gameBoard.setCurrentPlayer("OPERATIVE");
-            revealKeyButton.setVisible(false); // Operative's do not have access to reveal key
-            saveButton.setVisible(false);   // Operative's can't save the game
-            actionButton.setText("End turn");
+            actionPanel.updatePanelOperative();
         } else {
             gameBoard.setCurrentPlayer("SPYMASTER");
-            revealKeyButton.setVisible(true);
-            saveButton.setVisible(true);
-            actionButton.setText("Set hint");
+            actionPanel.updatePanelSpymaster();
         }
     }
 
@@ -728,7 +655,7 @@ public class CodenamesGUI {
     }
 
     // EFFECTS: get the Spymaster object whose turn it currently is
-    private Spymaster selectSpymaster() {
+    protected Spymaster selectSpymaster() {
         if (gameBoard.getCurrentTeam().equals(RED)) {
             return redSpymaster;
         } else {
@@ -765,91 +692,10 @@ public class CodenamesGUI {
 
     // EFFECTS: Print the number of guesses remaining and returns it
     //          Note that per the game rules, we can always guess 1 additional time than the guesses provided
-    private int guessesRemaining() {
+    protected int guessesRemaining() {
         Spymaster selected = selectSpymaster();
 
         return selected.getGuesses() + 1;
-    }
-
-    // EFFECTS: Returns true if the provided hint is valid
-    //          - One word at most
-    //          - A non-zero integer number of guesses provided
-    //          - A single "/" character between
-    private boolean validHint(String hint, Spymaster selected) {
-
-        // Check if there is a single word/clue given
-        int delimiterIndex = hint.indexOf('/'); // Index of the delimiter
-        if (delimiterIndex == -1) { // No delimiter found
-            return false;
-        }
-        String cluePortion = removeTrailingSpace(hint.substring(0, delimiterIndex));
-        if (!(countChar(cluePortion, ' ') == 0)) { // Multi-word hints have spaces
-            return false;
-        }
-
-        // Extract the # portion of the hint
-        Matcher isDigits = getDigits(hint.substring(delimiterIndex + 1));
-        boolean isNumber = isDigits.find();
-        int numberPortion;
-
-        if (isNumber) {
-            numberPortion = parseInt(isDigits.group(0));
-
-            // Make sure that there are no negative guesses provided
-            if (numberPortion < 0) {
-                return false;
-            }
-
-            setValidHint(selected, cluePortion, numberPortion);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    // EFFECTS: returns the count of delimiter within hint
-    private int countChar(String string, char delimiter) {
-        int delimiterCounter = 0;
-
-        // Count occurrences of the delimiter
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == delimiter) {
-                delimiterCounter++;
-            }
-        }
-
-        return delimiterCounter;
-    }
-
-    // EFFECTS: Removes a trailing space (if it exists)
-    private String removeTrailingSpace(String str) {
-        int lastCharIndex = str.length() - 1;
-        String lastChar = str.substring(lastCharIndex);
-        if (lastChar.equals(" ")) {
-            return str.substring(0, lastCharIndex);
-        } else {
-            return str;
-        }
-    }
-
-    // EFFECTS: Returns a regex matcher object (matching digits) for a given string
-    private Matcher getDigits(String string) {
-        String digits = "[0-9]+";
-
-        Pattern pattern = Pattern.compile(digits);
-
-        return pattern.matcher(string);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: sets the current Spymaster's hint and # of guesses
-    private void setValidHint(Spymaster spymaster, String clue, int numGuesses) {
-        spymaster.setHint(clue);
-        spymaster.setGuesses(numGuesses);
-
-        String setText;
-        setText = "Your hint is: " + spymaster.getHint() + ". You have " + guessesRemaining() + " guesses remaining!";
-        hintLabel.setText(addHtmlTags(setText));
     }
 
     // EFFECTS: Returns a randomly generated team to start the game ("RED" or "BLUE")
@@ -866,7 +712,7 @@ public class CodenamesGUI {
     }
 
     // EFFECTS: Returns a string with html tags appended (to center within a JLabel)
-    private String addHtmlTags(String s) {
+    protected String addHtmlTags(String s) {
         return "<html>" + s + "</html>";
     }
 
@@ -882,7 +728,7 @@ public class CodenamesGUI {
     // MODIFIES: this, "codenames.json"
     // EFFECTS: saves the game state to file
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
-    private void saveGameState() {
+    protected void saveGameState() {
         try {
             // Create fields for each of the respective objects we need to save
             JSONObject mergedObject;
@@ -961,6 +807,11 @@ public class CodenamesGUI {
             eventLog.logEvent(new Event(quantifier + " " + card.getTeam()
                     + " card '" + card.getWord() + "' has been added to the game board!"));
         }
+    }
+
+    // EFFECTS: Returns the Board associated with this game
+    protected Board getGameBoard() {
+        return gameBoard;
     }
 
 }
