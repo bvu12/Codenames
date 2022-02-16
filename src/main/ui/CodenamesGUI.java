@@ -30,18 +30,17 @@ public class CodenamesGUI {
     private static int FRAME_WIDTH;
     private static int FRAME_HEIGHT;
     private static final int CARD_ROWS = 5;
-    private static final int CARD_COLS = 5;
-    private static int CARD_BRDR;
-    private static int CARD_HGAP;
-    private static int CARD_VGAP;
+    protected static int CARD_BRDR;
+    protected static int CARD_HGAP;
+    protected static int CARD_VGAP;
     private static int CTRLS_BRDR;
-    private static  int CTRLS_HGAP;
+    private static int CTRLS_HGAP;
 
     // Font sizes
     private static int FONT_SCORE;
     private static int FONT_TEAM_INFO;
     private static int FONT_CONSOLE;
-    private static int FONT_CARDS;
+    protected static int FONT_CARDS;
 
     // Main JFrame
     private final JFrame frame;
@@ -70,7 +69,7 @@ public class CodenamesGUI {
     private JButton saveButton;
     private JButton actionButton;
 
-    private final GridLayout cardGridLayout = new GridLayout(1, CARD_COLS);
+//    protected static final GridLayout cardGridLayout = new GridLayout(1, CARD_COLS);
     private final GridLayout ctrlsGridLayout = new GridLayout(1, 3);
 
     // Data persistence
@@ -129,7 +128,6 @@ public class CodenamesGUI {
         setupActionPanel();
 
         // Basic frame operations
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frameCloseBehaviour();
         frameVisibleBehaviour();
     }
@@ -239,78 +237,20 @@ public class CodenamesGUI {
     // EFFECTS: Creates the five panels that make-up the 25 cards to be displayed
     private void setupCardPanel() {
         // Create the cards and add to the panel
-        cardPanel1 = new JPanel();
-        cardPanel2 = new JPanel();
-        cardPanel3 = new JPanel();
-        cardPanel4 = new JPanel();
-        cardPanel5 = new JPanel();
-        initializeCardPanel(cardPanel1);
-        initializeCardPanel(cardPanel2);
-        initializeCardPanel(cardPanel3);
-        initializeCardPanel(cardPanel4);
-        initializeCardPanel(cardPanel5);
+        cardPanel1 = new CardPanel(this, gameBoard);
+        cardPanel2 = new CardPanel(this, gameBoard);
+        cardPanel3 = new CardPanel(this, gameBoard);
+        cardPanel4 = new CardPanel(this, gameBoard);
+        cardPanel5 = new CardPanel(this, gameBoard);
 
-        // Gaps within the grid
-        cardGridLayout.setHgap(CARD_HGAP);
-        cardGridLayout.setVgap(CARD_VGAP);
+        mainPanel.add(cardPanel1);
+        mainPanel.add(cardPanel2);
+        mainPanel.add(cardPanel3);
+        mainPanel.add(cardPanel4);
+        mainPanel.add(cardPanel5);
 
-        // Create 25 buttons
-        createCardButtons();
+        // On initialization, deactivate the cards
         revealKey("DEACTIVATE");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Creates a GridLayout panel with border padding and adds it to the main panel
-    private void initializeCardPanel(JPanel jp) {
-        jp.setLayout(cardGridLayout);
-        jp.setBorder(BorderFactory.createEmptyBorder(CARD_BRDR, CARD_BRDR, CARD_BRDR, CARD_BRDR));
-        mainPanel.add(jp);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Creates 25 JButtons that act as the game's cards
-    private void createCardButtons() {
-        UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
-        for (int i = 1; i <= CARD_ROWS * CARD_COLS; i++) {
-            Card card = gameBoard.getBoard().get(i - 1); // 0-based index
-
-            // JButton
-            // SOURCE: https://docs.oracle.com/javase/tutorial/uiswing/layout/grid.html
-            CardButton btn = new CardButton(card);
-            btn.setFont(new Font("Arial", Font.BOLD, FONT_CARDS));
-            btn.setEnabled(false);
-
-            // Create action listener's associated with each card
-            cardButtonActionListeners(btn);
-
-            // Place on the appropriate panel
-            if (i <= 5) {
-                cardPanel1.add(btn);
-            } else if (i <= 10) {
-                cardPanel2.add(btn);
-            } else if (i <= 15) {
-                cardPanel3.add(btn);
-            } else if (i <= 20) {
-                cardPanel4.add(btn);
-            } else {
-                cardPanel5.add(btn);
-            }
-        }
-    }
-
-    // MODIFIES: btn
-    // EFFECTS: Adds an action listener that performs an action when the button is selected
-    private void cardButtonActionListeners(CardButton btn) {
-        // Once a card is pressed, deactivate it and progress the game appropriately
-        btn.addActionListener(e -> {
-            Card card = btn.getCard();
-            btn.setBackground(card.getCardColor());
-            btn.setOpaque(true);
-            btn.setEnabled(false);
-
-            guess(btn);
-
-        });
     }
 
 
@@ -633,7 +573,7 @@ public class CodenamesGUI {
 
     // MODIFIES: this
     // EFFECTS:  allows the operative to guess and changes the game-state according to their guess
-    private void guess(CardButton btn) {
+    protected void guess(CardButton btn) {
         Card card = btn.getCard();
         card.makeVisibleTeam();
 
