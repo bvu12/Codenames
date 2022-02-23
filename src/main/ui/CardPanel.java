@@ -56,7 +56,7 @@ public class CardPanel extends JPanel {
 
                     // If the card is NOT yet in play, add a border for enhanced visibility
                     if (!card.isVisibleTeam()) {
-                        setButtonBorder(btn, 7);
+                        setButtonBorder(btn, THICK_BORDER);
                     }
 
                     // Reveal the correct colour of each card

@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ public class CodenamesGUI {
     protected static int FONT_TEAM_INFO;
     protected static int FONT_CONSOLE;
     protected static int FONT_CARDS;
+    protected static int THICK_BORDER;
 
     // Main JFrame
     protected static JFrame frame;
@@ -120,14 +120,16 @@ public class CodenamesGUI {
     private void initializeScreenSize() {
         // Frame size
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//        Dimension screenSize = new Dimension(768,1024);
         FRAME_WIDTH = (int) (screenSize.width * 0.7);
         FRAME_HEIGHT =  min((int) (FRAME_WIDTH * 0.8), (int) (screenSize.height * 0.8));
 
         // Font
         FONT_SCORE = FRAME_WIDTH / 25;
-        FONT_TEAM_INFO = FONT_SCORE * 2 / 3;
+        FONT_TEAM_INFO = FONT_SCORE * 3 / 5;
         FONT_CONSOLE = FONT_SCORE * 2 / 5;
         FONT_CARDS = FONT_SCORE / 2;
+        THICK_BORDER = FRAME_WIDTH / 110;
 
         // Frame variables
         CARD_BRDR = FRAME_WIDTH / 60;
@@ -262,8 +264,8 @@ public class CodenamesGUI {
         // IMAGE SOURCE: https://soundcloud.com/thelightbird/end-credits-thanks-for-playing
         BufferedImage image;
         ImageIcon imageIcon;
-        int imageWidth;
-        int imageHeight;
+//        int imageWidth;
+//        int imageHeight;
 
         // Get the image
         try {
@@ -272,9 +274,17 @@ public class CodenamesGUI {
                     .read(ClassLoader.getSystemClassLoader().getSystemResourceAsStream("thanks-for-playing.jpg"));
 
             // Resize image
-            imageWidth = image.getWidth() * 7 / 4;
-            imageHeight = image.getHeight() * 7 / 4;
-            imageIcon = new ImageIcon(image.getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH));
+//            imageWidth = image.getWidth();
+//            imageHeight = image.getHeight();
+
+//            System.out.println("Image width: " + imageWidth);
+//            System.out.println("Image height: " + imageHeight);
+//            System.out.println("Frame width: " + FRAME_WIDTH);
+//            System.out.println("Frame height: " + FRAME_HEIGHT);
+
+
+            imageIcon = new ImageIcon(
+                    image.getScaledInstance((int) (FRAME_WIDTH * 0.7), FRAME_HEIGHT, Image.SCALE_SMOOTH));
 
             // Place onto icon
             JLabel jl = new JLabel();

@@ -62,9 +62,14 @@ public class ActionPanel extends JPanel {
     private void createPanelButtons() {
         // Create JButtons
         revealKeyButton = new JButton("Reveal key");
+        revealKeyButton.setFont(new Font("Calibri", Font.BOLD, FONT_TEAM_INFO));
+
 //        saveButton = new JButton("Save game");
         spacerLabel = new JLabel("", SwingConstants.CENTER);
+
+
         actionButton = new JButton("Set hint");
+        actionButton.setFont(new Font("Calibri", Font.BOLD, FONT_TEAM_INFO));
         actionButton.setBackground(new Color(131, 175, 84));
         actionButton.setOpaque(true);
     }
