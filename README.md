@@ -1,8 +1,18 @@
-# My Personal Project
+# Codenames
+## What is this?
 
-## Codenames
+This project was originally a school assignment to create a Java Swing application - I figured why not try to host this online, check it out here: [Codenames Java Swing application](https://codenames.link).
+
+This endeavor turned out to be not as simple as I initially thought, and I ended up utilizing the following tools to make it happen (and reading through A LOT of documentation):
+
+| Technology | Description |
+| ------ | ----------- |
+| Webswing   | a web server that allows you to run any Java Swing application inside your web browser, using only pure HTML5 |
+| NGINX | a reverse proxy that points requests to the WebSwing application |
+| AWS Lightsail    | the server that hosts the above two services |
+
 ***
-**What will the application do?**
+## What will the application do?
 
 This application will allow users to play the *Codenames* board game (https://en.wikipedia.org/wiki/Codenames_(board_game)). 
 
@@ -26,149 +36,17 @@ Once ready, operatives may select cards one-by-one - in which case there are fou
 The game continues until either the first team has extracted all their agents and has won or if the assassin card is revealed.
 
 ***
-**Who will use it?**
+##  Who will use it?
 
 Anyone interested in playing Codenames with a user interface is welcome to play the game.
 
-***
-**Why is this project of interested to me?**
+Seen below is a short .gif of the Blue Spymaster attempting to get their team to guess **Soldier**, **Doctor** and **Agent** with the hint ***Profession***, unfortunately, **Scuba Diver** also falls under this category! The red team takes this opportunity to guess **Alien** and **Angel** via the hint ***Believe*** and they win!
 
-Throughout the pandemic and virtual work environment, I had to opportunity to play Codenames with my coworkers online and thought it was very fun. I wanted to develop my own rudimentary implementation of the game.
-
-***
-### User Stories
-- As a user, I want to be able to see the current game's score
-- As a user, I want to generate a random board of 5x5 cards
-- As a user, I want to win the game if my team reaches the requisite number of points
-- As a user, I want to add 9 agents for one team, 8 agents for the other team, 1 assassin card and 7 neutral cards
-- As a user, I want to be able to quit the game on command
-- As a user (Spymaster), I want to be able to see which cards are my teams', the opposing teams' and the assassin card
-- As a user (Spymaster), I want to be able to provide a clue and number of agents (call it N)
-- As a user (Operative), I want to be able to select up to N+1 guesses
-- As a user (Operative), I want to be able to end my turn
-- As a user (Operative), I want to receive a point for every correct guess
-- As a user (Operative), I want to receive give a point to the opposing team if I incorrectly guess one of their cards
-- As a user (Operative), I want my turn to end if I select a neutral card
-- As a user (Operative), I want the game to end if I select the assassin card
-- As a user, I want to be able to save my gamestate to a file 
-- As a user, I want to be able to be able to load my gamestate from a file 
-- As a user, when I start the application, I want to be given the option to load my saved gamestate
+![gif](./README_images/Codenames.gif)
 
 ***
-**Phase 4: Task 2**
+##  Known issues
 
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'FALL' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'HOTEL' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'TABLET' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'PAN' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'AFRICA' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'PRESS' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible ASSASSIN card 'LOCH NESS' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'BEACH' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-A visible RED card 'COVER' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'RAY' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'GREEN' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'PARK' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'LOCK' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-A visible RED card 'GOLD' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'DINOSAUR' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'TUBE' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'DRAFT' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'SEAL' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'JACK' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible NEUTRAL card 'SOLDIER' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'BAT' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'SPOT' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible RED card 'LAP' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'ARM' has been added to the game board!
-
-Tue Nov 23 22:26:08 PST 2021  
-An invisible BLUE card 'FILM' has been added to the game board!
-
-Tue Nov 23 22:26:17 PST 2021  
-The BLUE team selected a BLUE card (PAN)!
-
-Tue Nov 23 22:26:17 PST 2021  
-The BLUE team selected a BLUE card (TABLET)!
-
-Tue Nov 23 22:26:17 PST 2021  
-The BLUE team selected a BLUE card (LOCK)!
-
-Tue Nov 23 22:26:18 PST 2021  
-The BLUE team selected a BLUE card (ARM)!
-
-Tue Nov 23 22:26:18 PST 2021  
-The BLUE team selected a BLUE card (FILM)!
-
-Tue Nov 23 22:26:18 PST 2021  
-The BLUE team selected a NEUTRAL card (SOLDIER)!
-
-Tue Nov 23 22:26:22 PST 2021  
-The RED team selected a RED card (PARK)!
-
-Tue Nov 23 22:26:23 PST 2021  
-The RED team selected a RED card (GREEN)!
-
-Tue Nov 23 22:26:23 PST 2021  
-The RED team selected a RED card (TUBE)!
-
-Tue Nov 23 22:26:23 PST 2021  
-The RED team selected a ASSASSIN card (LOCH NESS)!
-
-Tue Nov 23 22:26:23 PST 2021  
-The RED team has selected the assassin! 
-The BLUE team wins!
-
-***
-**Phase 4: Task 3**
-Given more time, the following changes would be made to the design of the game:
-- Add a bidirectional relationship between Spymaster and Operative. This allows a RED Operative & Spymaster to be linked (and a BLUE Operative & Spymaster to be linked).
-- Refactor the Operative class to remove fields related to the game state (specifically the score-keeping aspect of it) and move it to the Board class.
-- Refactor the ui classes to reduce coupling. Specifically, break-up the CodenamesGUI class into discrete classes that handle a specific aspect of the GUI (frame creation, event handling, etc.).
+> **Saving and loading of data is disabled**
++ Because the application was exported to a flat JAR file, loading of static data is possible; however, writing to the file is not
++ A possible fix is to create a datastore API that allows users to push to a database and pull from the database (no longer requiring modification of the JAR)
