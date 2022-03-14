@@ -7,9 +7,9 @@ This endeavor turned out to be not as simple as I initially thought, and I ended
 
 | Technology | Description |
 | ------ | ----------- |
-| Webswing   | a web server that allows you to run any Java Swing application inside your web browser, using only pure HTML5 |
-| NGINX | a reverse proxy that points requests to the WebSwing application |
-| AWS Lightsail    | the server that hosts the above two services |
+| [Webswing](https://www.webswing.org/)   | a web server that allows you to run any Java Swing application inside your web browser, using only pure HTML5 |
+| [NGINX](https://www.nginx.com/) | a reverse proxy that points requests to the WebSwing application |
+| [AWS EC2](https://aws.amazon.com/ec2/)    | the server that hosts the above two services |
 
 ***
 ## What will the application do?
